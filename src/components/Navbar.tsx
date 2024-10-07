@@ -54,11 +54,11 @@ const Navbar = () => {
             </div>
 
             <div className={`sm:hidden absolute top-0 right-0 bottom-0 bg-white transition-all ${visible ? "w-full" : "w-0"}`}>
-                <div onClick={() => setVisible(!visible)} className='flex p-6 flex-row gap-4 items-center cursor-pointer'>
+                <div onClick={() => setVisible(!visible)} className='flex p-6 flex-row  gap-4 items-center cursor-pointer'>
                     <img src={Back} alt="Back" className='h-4 rotate-180' />
                     Back
                 </div>
-                <div className='flex flex-col'>
+                <div className='flex flex-col text-lg'>
                     <NavLink to="/"   onClick={() => setVisible(!visible)} className={({  }) => 
                         classNames("py-2 pl-6 border-b", {
                             'text-main': location.pathname === "/"
