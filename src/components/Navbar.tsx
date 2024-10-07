@@ -22,12 +22,13 @@ const Navbar = () => {
         <div className='flex items-center justify-between h-[75px] md:h-[90px] lg:h-[100px] font-medium font-raleway'>
             <img src={Logo} alt="Logo" className='w-24 md:w-28 lg:w-32' />
 
+            {/* Desktop Navigation */}
             <ul className='hidden sm:flex gap-8 text-gray-900'>
                 {navItems.map(item => (
                     <NavLink 
                         key={item.name} 
                         to={item.href} 
-                        className={({  }) => 
+                        className={() => 
                             classNames("text-gray-700", {
                                 'text-main': location.pathname === item.href 
                             })
@@ -38,6 +39,7 @@ const Navbar = () => {
                 ))}
             </ul>
 
+            {/* Action icons */}
             <div className='flex items-center gap-6'>
                 <img src={SearchLogo} alt="Search" className='w-5' />
                 
@@ -53,31 +55,40 @@ const Navbar = () => {
                 <img onClick={() => setVisible(true)} src={Menu} alt="Menu" className='flex sm:hidden w-5 cursor-pointer' />
             </div>
 
-            <div className={`sm:hidden absolute top-0 right-0 bottom-0 bg-white transition-all ${visible ? "w-full" : "w-0"}`}>
-                <div onClick={() => setVisible(!visible)} className='flex p-6 flex-row  gap-4 items-center cursor-pointer'>
+            {/* Mobile Sidebar Menu */}
+            <div className={`sm:hidden fixed top-0 right-0 bottom-0 bg-white z-40 transition-transform duration-300 ${visible ? "translate-x-0 w-[100%]" : "translate-x-full w-0"}`}>
+                <div onClick={() => setVisible(!visible)} className='flex p-6 gap-4 items-center cursor-pointer'>
                     <img src={Back} alt="Back" className='h-4 rotate-180' />
                     Back
                 </div>
                 <div className='flex flex-col text-lg'>
-                    <NavLink to="/"   onClick={() => setVisible(!visible)} className={({  }) => 
-                        classNames("py-2 pl-6 border-b", {
-                            'text-main': location.pathname === "/"
-                        })
-                    }>Home</NavLink>
-                    <NavLink to="/collections"  onClick={() => setVisible(!visible)} className={({  }) => 
-                        classNames("py-2 pl-6 border-b", {
-                            'text-main': location.pathname === "/collections"
-                        })
-                    }>Collections</NavLink>
-                    <NavLink to="/about"  onClick={() => setVisible(!visible)} className={({  }) => 
-                        classNames("py-2 pl-6 border-b", {
-                            'text-main': location.pathname === "/about"
-                        })
-                    }>About</NavLink>
+                    {navItems.map(item => (
+                        <NavLink 
+                            key={item.name}
+                            to={item.href}
+                            onClick={() => setVisible(false)} 
+                            className={() => 
+                                classNames("py-2 pl-6 border-b", {
+                                    'text-main': location.pathname === item.href
+                                })
+                            }
+                        >
+                            {item.name}
+                        </NavLink>
+                    ))}
                 </div>
             </div>
+
+            {/* Overlay to close the sidebar */}
+            {visible && (
+                <div 
+                    onClick={() => setVisible(false)} 
+                    className="fixed inset-0 bg-black opacity-50 z-30"
+                ></div>
+            )}
         </div>
     );
 };
 
 export default Navbar;
+``
