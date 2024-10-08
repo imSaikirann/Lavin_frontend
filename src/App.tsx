@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Collection from "./pages/Collection"
 import Navbar from "./components/Navbar"
 import About from "./pages/About"
+import Product from "./pages/Product"
 function App() {
  
 
@@ -14,6 +15,7 @@ function App() {
       <Route path="/" element={<Home/>}></Route>
       <Route path="/collections" element={<Collection/>}></Route>
       <Route path="/about" element={<About/>}></Route>
+      <Route path="/product" element={<Product/>}></Route>
     </Routes>
   </div>
   )
