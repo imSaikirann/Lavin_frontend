@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import HeroImg from "../assets/Hero.png";
 
 const Hero = () => {
@@ -11,9 +12,11 @@ const Hero = () => {
         <p className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-6 sm:mb-8 leading-relaxed">
           Adding Value Everyday
         </p>
-        <button className="font-semibold text-md sm:text-xl md:text-lg bg-black text-white py-2 px-3 sm:px-8 shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+       <NavLink to="/collections">
+       <button className="font-semibold text-md sm:text-xl md:text-lg bg-black text-white py-2 px-3 sm:px-8 shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
           SHOP NOW
         </button>
+       </NavLink>
       </div>
 
       {/* Right: Hero Image */}

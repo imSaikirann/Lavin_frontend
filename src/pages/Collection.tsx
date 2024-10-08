@@ -15,7 +15,7 @@ const Collection = () => {
         {/* Product Card */}
         <div className="p-2 lg:p-4 h-64 md:h-56 lg:h-72 bg-white  transition-shadow duration-300 ease-in-out cursor-pointer rounded-lg">
           {/* Product Image */}
-          <div className="overflow-hidden rounded-lg">
+          <div className="overflow-hidden ">
             <img
               src={Book}
               alt="Lavin Notebook"
@@ -33,7 +33,7 @@ const Collection = () => {
         {/* Repeat for more products */}
         <div className="p-2 lg:p-4 h-64  md:h-56 lg:h-72 bg-white  transition-shadow duration-300 ease-in-out cursor-pointer rounded-lg">
           {/* Product Image */}
-          <div className="overflow-hidden rounded-lg">
+          <div className="overflow-hidden ">
             <img
               src={Book}
               alt="Lavin Notebook"
