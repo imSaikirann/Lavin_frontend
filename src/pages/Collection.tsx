@@ -5,20 +5,20 @@ const Collection = () => {
     <div className="my-10 px-4 md:px-8">
       {/* Title Section */}
       <div className="flex items-center justify-center">
-        <h1 className="text-3xl md:text-4xl lg:text-4xl font-medium font-poppins text-gray-800">
+        <h1 className="text-xl md:text-2xl lg:text-4xl font-medium font-poppins text-gray-800">
           Latest Products
         </h1>
       </div>
 
       {/* Products Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 my-8">
-        <div className="overflow-hidden p-2 lg:p-4 shadow-md rounded-lg bg-white hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-pointer">
+        <div className="overflow-hidden p-2 lg:p-4   bg-white transition-shadow duration-300 ease-in-out cursor-pointer">
           {/* Product Image */}
-          <div className="overflow-hidden rounded-lg">
+          <div className="overflow-hidden ">
             <img
               src={Book}
               alt="Lavin Notebook"
-              className="w-full h-full object-cover rounded-lg transform hover:scale-105 transition-transform duration-300 ease-in-out"
+              className="w-full h-full object-cover  transform hover:scale-105 transition-transform duration-300 ease-in-out"
             />
           </div>
           {/* Product Info */}
