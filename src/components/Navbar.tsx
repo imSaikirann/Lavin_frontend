@@ -20,7 +20,7 @@ const Navbar = () => {
 
     return (
         <div className='flex items-center justify-between h-[75px] md:h-[90px] lg:h-[100px] font-medium font-raleway'>
-            <img src={Logo} alt="Logo" className='w-24 md:w-28 lg:w-32' />
+            <Link to="/"><img src={Logo} alt="Logo" className='w-24 md:w-28 lg:w-32' /></Link>
 
             {/* Desktop Navigation */}
             <ul className='hidden sm:flex gap-8 text-gray-900'>

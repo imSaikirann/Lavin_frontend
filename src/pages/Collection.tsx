@@ -12,7 +12,7 @@ const Collection = () => {
 
       {/* Products Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 my-8">
-        <div className="overflow-hidden p-2 lg:p-4 shadow-md rounded-lg bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out">
+        <div className="overflow-hidden p-2 lg:p-4 shadow-md rounded-lg bg-white hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-pointer">
           {/* Product Image */}
           <div className="overflow-hidden rounded-lg">
             <img
