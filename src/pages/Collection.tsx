@@ -4,11 +4,12 @@ const Collection = () => {
   return (
     <div className="my-10 px-4 md:px-8 max-w-screen-xl mx-auto">
       {/* Title Section */}
-      <div className="flex items-center justify-center mb-8">
-        <h1 className="text-xl md:text-2xl lg:text-4xl font-medium font-poppins text-gray-800">
-          Latest Products
-        </h1>
-      </div>
+      <div className="mb-8">
+  <h1 className="text-2xl text-left md:text-center lg:text-4xl font-medium font-poppins text-gray-800">
+    New Products
+  </h1>
+</div>
+
 
       {/* Products Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
