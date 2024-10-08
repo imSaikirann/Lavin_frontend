@@ -1,9 +1,11 @@
+import Collection from "./Collection"
 import Hero from "./Hero"
 
 const Home = () => {
   return (
-    <div>
+    <div className="mt-2">
       <Hero/>
+      <Collection/>
     </div>
   )
 }
