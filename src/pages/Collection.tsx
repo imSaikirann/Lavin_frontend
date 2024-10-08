@@ -12,13 +12,13 @@ const Collection = () => {
 
       {/* Products Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 my-8">
-        <div className="overflow-hidden p-4 shadow-lg rounded-lg bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out">
+        <div className="overflow-hidden p-2 lg:p-4 shadow-md rounded-lg bg-white hover:shadow-2xl transition-shadow duration-300 ease-in-out">
           {/* Product Image */}
           <div className="overflow-hidden rounded-lg">
             <img
               src={Book}
               alt="Lavin Notebook"
-              className="rounded-lg transform hover:scale-105 transition-transform duration-300 ease-in-out"
+              className="w-full h-full object-cover rounded-lg transform hover:scale-105 transition-transform duration-300 ease-in-out"
             />
           </div>
           {/* Product Info */}
@@ -27,10 +27,10 @@ const Collection = () => {
             <p className="text-md font-medium font-raleway text-main">$8</p>
           </div>
           {/* View or Buy Button */}
-       
+         
         </div>
 
-        {/* Add more products here in the same format */}
+        {/* Repeat for more products */}
       </div>
     </div>
   );
