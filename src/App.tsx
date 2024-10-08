@@ -4,6 +4,7 @@ import Collection from "./pages/Collection"
 import Navbar from "./components/Navbar"
 import About from "./pages/About"
 import Product from "./pages/Product"
+import Footer from "./pages/Footer"
 function App() {
  
 
@@ -17,6 +18,7 @@ function App() {
       <Route path="/about" element={<About/>}></Route>
       <Route path="/product" element={<Product/>}></Route>
     </Routes>
+    <Footer/>
   </div>
   )
 }
