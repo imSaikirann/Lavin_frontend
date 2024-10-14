@@ -27,7 +27,7 @@ const Product: React.FC = () => {
     const selectedProduct = products[selectedProductIndex] || null;
 
     return (
-        <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
+        <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100 ">
             <div className="flex gap-12 sm:gap-12 flex-col sm:flex-row">
                 <div className="flex-1 flex flex-row gap-3 sm:flex-row">
                     <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll gap-3 justify-between sm:justify-normal sm:w-[18.7%] w-full">
@@ -62,7 +62,7 @@ const Product: React.FC = () => {
                 </div>
 
                 {/* Display selected product name and price */}
-                <div className="flex-1">
+                <div className="flex-1 font-poppins">
                     {selectedProduct ? (
                         <div>
                           <h1 className="font-medium text-2xl mt-2">{selectedProduct.productName}</h1>
