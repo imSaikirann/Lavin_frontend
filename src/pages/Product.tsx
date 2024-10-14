@@ -26,6 +26,27 @@ const Product: React.FC = () => {
 
     const selectedProduct = products[selectedProductIndex] || null;
 
+    const handleCart = (id: string) => {
+      try {
+          // Get the cart from localStorage or initialize an empty array if it doesn't exist
+          const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  
+          // Check if the product ID is already in the cart to prevent duplication
+          if (!cart.includes(id)) {
+              // Add the new product ID to the cart array
+              cart.push(id);
+  
+              // Save the updated cart back to localStorage
+              localStorage.setItem("cart", JSON.stringify(cart));
+              console.log("Product added to cart:", id);
+          } else {
+              console.log("Product is already in the cart");
+          }
+      } catch (error) {
+          console.error("Error handling cart:", error);
+      }
+  };
+  
     return (
         <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100 ">
             <div className="flex gap-12 sm:gap-12 flex-col sm:flex-row">
@@ -81,7 +102,9 @@ const Product: React.FC = () => {
                               <p>No variants available</p>
                           )}
 
-                          <button className="bg-black text-white px-5 py-2 mt-5 cursor-pointer">Add to Cart</button>
+                          <button className="bg-black text-white px-5 py-2 mt-5 cursor-pointer"
+                          onClick={()=>handleCart(selectedProduct.id)}
+                          >Add to Cart</button>
                         </div>
                     ) : (
                         <p>No product selected</p>
