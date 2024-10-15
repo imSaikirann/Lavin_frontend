@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar"
 import About from "./pages/About"
 import Product from "./pages/Product"
 import Footer from "./pages/Footer"
+import Cart from "./pages/Cart"
 function App() {
  
 
@@ -17,6 +18,7 @@ function App() {
       <Route path="/collections" element={<Collection/>}></Route>
       <Route path="/about" element={<About/>}></Route>
       <Route path="/product" element={<Product/>}></Route>
+      <Route path="/cart" element={<Cart/>}></Route>
     </Routes>
     <Footer/>
   </div>

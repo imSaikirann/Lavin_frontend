@@ -10,8 +10,8 @@ import classNames from 'classnames';
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
-    const [cartCount,setCartCount] = useState("")
-    const location = useLocation(); 
+    const [cartCount, setCartCount] = useState(0); // Change to a number
+    const location = useLocation();
 
     const navItems = [
         { name: "Home", href: "/" },
@@ -20,15 +20,15 @@ const Navbar = () => {
     ];
 
     useEffect(() => {
-
         const cart = localStorage.getItem("cart");
-      
 
+        // Parse the cart data or default to an empty array if the cart is null
         const parsedCart = cart ? JSON.parse(cart) : [];
-      
-  
+
+        // Update cart count based on the number of items in the cart
         setCartCount(parsedCart.length);
-      }, []);
+    }, []);
+
     return (
         <div className='flex items-center justify-between h-[75px] md:h-[90px] lg:h-[100px] font-medium font-raleway'>
             <Link to="/"><img src={Logo} alt="Logo" className='w-24 md:w-28 lg:w-32' /></Link>
@@ -36,12 +36,12 @@ const Navbar = () => {
             {/* Desktop Navigation */}
             <ul className='hidden sm:flex gap-8 text-gray-900'>
                 {navItems.map(item => (
-                    <NavLink 
-                        key={item.name} 
-                        to={item.href} 
-                        className={() => 
+                    <NavLink
+                        key={item.name}
+                        to={item.href}
+                        className={() =>
                             classNames("text-gray-700", {
-                                'text-main': location.pathname === item.href 
+                                'text-main': location.pathname === item.href
                             })
                         }
                     >
@@ -53,14 +53,19 @@ const Navbar = () => {
             {/* Action icons */}
             <div className='flex items-center gap-6'>
                 <img src={SearchLogo} alt="Search" className='w-5' />
-                
+
                 <div className='group relative'>
                     <img src={Profile} alt="Profile" className='w-5' />
                 </div>
 
                 <Link to="/cart" className='relative'>
                     <img src={Cart} alt="Cart" className='w-5' />
-                    <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center bg-black text-white rounded-full aspect-square text-[8px] leading-4'>{cartCount}</p>
+                    {/* Only show the cart count badge if the cart count is greater than 0 */}
+                    {cartCount > 0 && (
+                        <p className={`absolute right-[-5px] bottom-[-5px] w-4 text-center bg-black text-white rounded-full aspect-square text-[8px] leading-4`}>
+                            {cartCount}
+                        </p>
+                    )}
                 </Link>
 
                 <img onClick={() => setVisible(true)} src={Menu} alt="Menu" className='flex sm:hidden w-5 cursor-pointer' />
@@ -74,11 +79,11 @@ const Navbar = () => {
                 </div>
                 <div className='flex flex-col text-lg'>
                     {navItems.map(item => (
-                        <NavLink 
+                        <NavLink
                             key={item.name}
                             to={item.href}
-                            onClick={() => setVisible(false)} 
-                            className={() => 
+                            onClick={() => setVisible(false)}
+                            className={() =>
                                 classNames("py-2 pl-6 border-b", {
                                     'text-main': location.pathname === item.href
                                 })
@@ -92,8 +97,8 @@ const Navbar = () => {
 
             {/* Overlay to close the sidebar */}
             {visible && (
-                <div 
-                    onClick={() => setVisible(false)} 
+                <div
+                    onClick={() => setVisible(false)}
                     className="fixed inset-0 bg-black opacity-50 z-30"
                 ></div>
             )}
@@ -102,4 +107,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-``
