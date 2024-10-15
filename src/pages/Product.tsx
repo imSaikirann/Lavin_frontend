@@ -12,7 +12,9 @@ const Product: React.FC = () => {
     const products: Products[] = useAppSelector((state) => state.items); // Updated to reflect the correct slice
     const dispatch = useAppDispatch();
     const s3Url = import.meta.env.VITE_S3_URL;
-
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
     useEffect(() => {
         if (dataStatus === 'idle') {
             dispatch(fetchData());
