@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import axios from "axios";
+
 const Cart = () => {
     const [cart, setCart] = useState<string[]>([]) 
 
@@ -11,20 +11,9 @@ const Cart = () => {
         }
     }, []) 
 
-    const fetchData = async () => {
-        const apiUrl = import.meta.env.VITE_API_URL;
-        const s3Url = import.meta.env.VITE_S3_URL; 
-        try {
-            const response = await axios.get<{ data: Products[]}>(`${apiUrl}/api/v1/products/getProducts`);
-            
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
+  
 
-    useEffect(() => {
-        fetchData();
-    }, []);
+  
     return (
         <div>
             Cart: {cart.length > 0 ? (
