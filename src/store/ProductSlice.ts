@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Products } from '../types/types';
 
 interface DataState {
-  items: Products[];  // Fix: items should be of type Products[]
+  items: Products[];  
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }

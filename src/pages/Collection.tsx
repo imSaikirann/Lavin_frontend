@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Products } from "../types/types";
 import Spinner from "../components/Spinner";
@@ -11,7 +10,7 @@ const Collection = () => {
   const products: Products[] = useAppSelector((state) => state.items);
   const dispatch = useAppDispatch();
   const s3Url = import.meta.env.VITE_S3_URL;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (dataStatus === 'idle') {
@@ -19,9 +18,10 @@ const Collection = () => {
     }
   }, [dispatch, dataStatus]);
 
-  const handleSelectedProduct = (id:string)=>{
-navigate(`/product/${id}`)
-  }
+  const handleSelectedProduct = (id: string) => {
+    navigate(`/product/${id}`);
+  };
+
   return (
     <div className="my-10 px-4 md:px-8 max-w-screen-xl mx-auto">
       {/* Title Section */}
@@ -31,18 +31,25 @@ navigate(`/product/${id}`)
         </h1>
       </div>
 
-      {/* Product Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-        {dataStatus === 'loading' ? (
+      {/* Loading Spinner */}
+      {dataStatus === 'loading' ? (
+        <div className="flex justify-center items-center">
           <Spinner />
-        ) : (
-          products.map((product) => (
-          
-              <div onClick={()=>handleSelectedProduct(product.id)} className="p-2 lg:p-4 h-64 md:h-56 lg:h-72 bg-white transition-shadow duration-300 ease-in-out cursor-pointer rounded-lg">
+        </div>
+      ) : (
+        /* Product Grid */
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          {products.length > 0 ? (
+            products.map((product) => (
+              <div
+                key={product.id}
+                onClick={() => handleSelectedProduct(product.id)}
+                className="p-2 lg:p-4 h-64 md:h-56 lg:h-72 bg-white transition-shadow duration-300 ease-in-out cursor-pointer rounded-lg"
+              >
                 <div className="overflow-hidden">
                   {product.images.length > 0 && (
                     <img
-                      src={`${s3Url}/${product.images[0]}`} // Display the first image in the array
+                      src={`${s3Url}/${product.images[0]}`}
                       alt={product.productName}
                       className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300 ease-in-out"
                     />
@@ -53,16 +60,22 @@ navigate(`/product/${id}`)
                 <div className="flex items-center justify-between pt-3 pb-1 p-1">
                   <p className="text-md font-medium font-raleway text-gray-700">{product.productName}</p>
                   {product.variants.length > 0 ? (
-                    <p className="text-md font-medium font-raleway text-main">₹{product.variants[0].price}</p> // Display the first variant's price
+                    <p className="text-md font-medium font-raleway text-main">
+                      ₹{product.variants[0].price}
+                    </p>
                   ) : (
-                    <p className="text-md font-medium font-raleway text-main">N/A</p> // Handle case where no variant is available
+                    <p className="text-md font-medium font-raleway text-main">N/A</p>
                   )}
                 </div>
               </div>
-       
-          ))
-        )}
-      </div>
+            ))
+          ) : (
+            <p className="col-span-full text-center text-gray-500">
+              No products available.
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
