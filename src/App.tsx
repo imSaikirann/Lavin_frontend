@@ -6,6 +6,7 @@ import About from "./pages/About"
 import Product from "./pages/Product"
 import Footer from "./pages/Footer"
 import Cart from "./pages/Cart"
+import Checkout from "./pages/Checkout"
 function App() {
  
 
@@ -19,6 +20,7 @@ function App() {
       <Route path="/about" element={<About/>}></Route>
       <Route path="/product/:id" element={<Product/>}></Route>
       <Route path="/cart" element={<Cart/>}></Route>
+      <Route path="/checkout" element={<Checkout/>}></Route>
     </Routes>
     <Footer/>
   </div>

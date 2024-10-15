@@ -1,42 +1,39 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../store/Hooks";
 import { Products } from "../types/types";
-import { Link } from "react-router-dom"; // To navigate to product pages
-import Spinner from "../components/Spinner"; // Spinner component
-
+import { Link } from "react-router-dom"; 
+import Spinner from "../components/Spinner"; 
+import { useNavigate } from 'react-router-dom';
 const Cart = () => {
   const [cart, setCart] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
-  const products: Products[] = useAppSelector((state) => state.items); // Get products from Redux store
+  const [loading, setLoading] = useState<boolean>(true); 
+  const products: Products[] = useAppSelector((state) => state.items); 
   const s3Url = import.meta.env.VITE_S3_URL;
-
+  const navigate = useNavigate();
   useEffect(() => {
-    // Simulate a delay to demonstrate the loading spinner
+   
     setTimeout(() => {
       const storedCart = localStorage.getItem("cart");
       if (storedCart) {
         setCart(JSON.parse(storedCart));
       }
-      setLoading(false); // Set loading to false after data is fetched
-    }, 1000); // Adjust the delay as per your requirement
+      setLoading(false); 
+    }, 1000); 
   }, []);
 
-  // Filter products based on cart items
+
   const cartItems = products.filter((product) => cart.includes(product.id));
 
-  // Remove item from cart
+
   const removeFromCart = (id: string) => {
     const updatedCart = cart.filter((productId) => productId !== id);
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  // Checkout and clear the cart
+
   const handleCheckout = () => {
-    alert("Proceeding to checkout!");
-    // Clear cart (you could also redirect to a checkout page)
-    setCart([]);
-    localStorage.removeItem("cart");
+    navigate('/checkout')
   };
 
   return (
@@ -45,7 +42,7 @@ const Cart = () => {
 
       {loading ? (
         <div className="flex justify-center items-center">
-          <Spinner /> {/* Show Spinner while loading */}
+          <Spinner /> 
         </div>
       ) : cartItems.length > 0 ? (
         <div>
