@@ -8,8 +8,8 @@ const Product: React.FC = () => {
     const [selectedProductIndex, setSelectedProductIndex] = useState<number>(0);
     const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
 
-    const dataStatus = useAppSelector((state) => state.status); // Updated to reflect the correct slice
-    const products: Products[] = useAppSelector((state) => state.items); // Updated to reflect the correct slice
+    const dataStatus = useAppSelector((state) => state.status); 
+    const products: Products[] = useAppSelector((state) => state.items); 
     const dispatch = useAppDispatch();
     const s3Url = import.meta.env.VITE_S3_URL;
     useEffect(() => {
