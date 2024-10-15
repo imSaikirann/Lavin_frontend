@@ -1,27 +1,25 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom"; // To get the id from URL
 import { Products } from "../types/types";
 import Spinner from "../components/Spinner";
-import { useAppDispatch, useAppSelector } from "../store/Hooks";
-import { fetchData } from "../store/ProductSlice";
+import {  useAppSelector } from "../store/Hooks";
+
 
 const Product: React.FC = () => {
-    const [selectedProductIndex, setSelectedProductIndex] = useState<number>(0);
+    const { id } = useParams<{ id: string }>(); // Get the product id from the URL
     const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
 
     const dataStatus = useAppSelector((state) => state.status); 
     const products: Products[] = useAppSelector((state) => state.items); 
-    const dispatch = useAppDispatch();
+
     const s3Url = import.meta.env.VITE_S3_URL;
+
     useEffect(() => {
         window.scrollTo(0, 0);
-      }, []);
-    useEffect(() => {
-        if (dataStatus === 'idle') {
-            dispatch(fetchData());
-        }
-    }, [dispatch, dataStatus]);
+    }, []);
 
-    const selectedProduct = products[selectedProductIndex] || null;
+    // Filter the product based on the id from URL
+    const selectedProduct = products.find((product) => product.id === id) || null;
 
     const handleCart = (id: string) => {
         try {
@@ -46,21 +44,14 @@ const Product: React.FC = () => {
                 <div className="flex gap-12 sm:gap-12 flex-col sm:flex-row">
                     <div className="flex-1 flex flex-row gap-3 sm:flex-row">
                         <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll gap-3 justify-between sm:justify-normal sm:w-[18.7%] w-full">
-                            {products.map((product, productIndex) => (
-                                <div key={product.id}>
-                                    {product.images.map((image, imageIndex) => (
-                                        <img
-                                            onClick={() => {
-                                                setSelectedProductIndex(productIndex);
-                                                setSelectedImageIndex(imageIndex);
-                                            }}
-                                            key={imageIndex}
-                                            src={`${s3Url}/${image}`}
-                                            alt={`Product image ${imageIndex + 1}`}
-                                            className="w-[20%] sm:w-full  sm:mb-3 flex-shrink-0 cursor-pointer"
-                                        />
-                                    ))}
-                                </div>
+                            {selectedProduct && selectedProduct.images.map((image, imageIndex) => (
+                                <img
+                                    onClick={() => setSelectedImageIndex(imageIndex)}
+                                    key={imageIndex}
+                                    src={`${s3Url}/${image}`}
+                                    alt={`Product image ${imageIndex + 1}`}
+                                    className="w-[20%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
+                                />
                             ))}
                         </div>
 
@@ -110,7 +101,7 @@ const Product: React.FC = () => {
                                 </button>
                             </div>
                         ) : (
-                            <p>No product selected</p>
+                            <p>No product found</p>
                         )}
                     </div>
                 </div>

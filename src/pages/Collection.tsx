@@ -1,15 +1,17 @@
-import { Link } from 'react-router-dom';
+
 import { useEffect } from "react";
 import { Products } from "../types/types";
 import Spinner from "../components/Spinner";
 import { useAppDispatch, useAppSelector } from "../store/Hooks";
 import { fetchData } from "../store/ProductSlice";
+import { useNavigate } from 'react-router-dom';
 
 const Collection = () => {
-  const dataStatus = useAppSelector((state) => state.status); 
-  const products: Products[] = useAppSelector((state) => state.items); 
+  const dataStatus = useAppSelector((state) => state.status);
+  const products: Products[] = useAppSelector((state) => state.items);
   const dispatch = useAppDispatch();
   const s3Url = import.meta.env.VITE_S3_URL;
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (dataStatus === 'idle') {
@@ -17,6 +19,9 @@ const Collection = () => {
     }
   }, [dispatch, dataStatus]);
 
+  const handleSelectedProduct = (id:string)=>{
+navigate(`/product/${id}`)
+  }
   return (
     <div className="my-10 px-4 md:px-8 max-w-screen-xl mx-auto">
       {/* Title Section */}
@@ -32,8 +37,8 @@ const Collection = () => {
           <Spinner />
         ) : (
           products.map((product) => (
-            <Link to="/product" key={product.id}>
-              <div className="p-2 lg:p-4 h-64 md:h-56 lg:h-72 bg-white transition-shadow duration-300 ease-in-out cursor-pointer rounded-lg">
+          
+              <div onClick={()=>handleSelectedProduct(product.id)} className="p-2 lg:p-4 h-64 md:h-56 lg:h-72 bg-white transition-shadow duration-300 ease-in-out cursor-pointer rounded-lg">
                 <div className="overflow-hidden">
                   {product.images.length > 0 && (
                     <img
@@ -54,7 +59,7 @@ const Collection = () => {
                   )}
                 </div>
               </div>
-            </Link>
+       
           ))
         )}
       </div>
