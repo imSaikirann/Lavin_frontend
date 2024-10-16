@@ -21,6 +21,7 @@ export const ShopContextProvider = ({ children }) => {
         const apiUrl = import.meta.env.VITE_API_URL; 
         const response = await axios.get(`${apiUrl}/api/v1/products/getProducts`); 
         setProducts(response.data.data);
+        
         setDataStatus("success");
       } catch (error) {
         console.error("Error fetching products:", error);
