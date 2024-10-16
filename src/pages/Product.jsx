@@ -1,16 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Products } from "../types/types";
 import Spinner from "../components/Spinner";
-import {  useAppSelector } from "../store/Hooks";
+import { ShopContext } from "../store/ShopContext"; // Ensure the path is correct
 
+const Product = () => {
+    const { id } = useParams(); 
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-const Product: React.FC = () => {
-    const { id } = useParams<{ id: string }>(); 
-    const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
-
-    const dataStatus = useAppSelector((state) => state.status); 
-    const products: Products[] = useAppSelector((state) => state.items); 
+    // Use context and check for null
+    const shopContext = useContext(ShopContext);
+    const { products, dataStatus } = shopContext || { products: [], dataStatus: 'loading' }; 
 
     const s3Url = import.meta.env.VITE_S3_URL;
 
@@ -18,10 +17,9 @@ const Product: React.FC = () => {
         window.scrollTo(0, 0);
     }, []);
 
-    // Filter the product based on the id from URL
     const selectedProduct = products.find((product) => product.id === id) || null;
 
-    const handleCart = (id: string) => {
+    const handleCart = (id) => {
         try {
             const cart = JSON.parse(localStorage.getItem("cart") || "[]");
             if (!cart.includes(id)) {
@@ -38,7 +36,7 @@ const Product: React.FC = () => {
 
     return (
         <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
-            {dataStatus === 'loading' ? (  // Use Redux status for loading
+            {dataStatus === 'loading' ? (  
                 <Spinner />
             ) : (
                 <div className="flex gap-12 sm:gap-12 flex-col sm:flex-row">

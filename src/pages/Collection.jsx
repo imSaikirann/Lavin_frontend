@@ -1,24 +1,17 @@
-import { useEffect } from "react";
-import { Products } from "../types/types";
+import { useEffect, useContext } from "react";
+
 import Spinner from "../components/Spinner";
-import { useAppDispatch, useAppSelector } from "../store/Hooks";
-import { fetchData } from "../store/ProductSlice";
+import { ShopContext } from "../store/ShopContext"; // Import your ShopContext
 import { useNavigate } from 'react-router-dom';
 
 const Collection = () => {
-  const dataStatus = useAppSelector((state) => state.status);
-  const products: Products[] = useAppSelector((state) => state.items);
-  const dispatch = useAppDispatch();
+  const { products, dataStatus} = useContext(ShopContext); 
   const s3Url = import.meta.env.VITE_S3_URL;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (dataStatus === 'idle') {
-      dispatch(fetchData());
-    }
-  }, [dispatch, dataStatus]);
 
-  const handleSelectedProduct = (id: string) => {
+
+  const handleSelectedProduct = (id) => {
     navigate(`/product/${id}`);
   };
 

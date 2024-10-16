@@ -1,17 +1,19 @@
+import { createRoot } from 'react-dom/client';
+import App from './App'; // Import App from App.js
+import './index.css';
+import { BrowserRouter } from 'react-router-dom';
+import { ShopContextProvider } from './store/ShopContext'; 
+import React from 'react';
 
-import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import { BrowserRouter } from 'react-router-dom'
-import StoreProvider from './components/StoreProvider.tsx'
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Root element not found. Ensure your HTML file has an element with id "root".');
+}
 
-createRoot(document.getElementById('root')!).render(
+createRoot(rootElement).render(
   <BrowserRouter>
-  <StoreProvider>
-  <App />
-  </StoreProvider>
- 
+    <ShopContextProvider> 
+      <App />
+    </ShopContextProvider>
   </BrowserRouter>
-  
-
-)
+);
