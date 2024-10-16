@@ -1,15 +1,17 @@
 import { useEffect, useContext } from "react";
-
 import Spinner from "../components/Spinner";
-import { ShopContext } from "../store/ShopContext"; // Import your ShopContext
+import { ShopContext } from "../store/ShopContext";
 import { useNavigate } from 'react-router-dom';
 
 const Collection = () => {
-  const { products, dataStatus} = useContext(ShopContext); 
+  const { products, dataStatus, search, showSearch } = useContext(ShopContext); 
   const s3Url = import.meta.env.VITE_S3_URL;
   const navigate = useNavigate();
 
-
+  // Filter products based on search query
+  const filteredProducts = search && showSearch 
+    ? products.filter(item => item.productName.toLowerCase().includes(search.toLowerCase())) 
+    : products;
 
   const handleSelectedProduct = (id) => {
     navigate(`/product/${id}`);
@@ -32,8 +34,8 @@ const Collection = () => {
       ) : (
         /* Product Grid */
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {products.length > 0 ? (
-            products.map((product) => (
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
               <div
                 key={product.id}
                 onClick={() => handleSelectedProduct(product.id)}
@@ -51,7 +53,9 @@ const Collection = () => {
 
                 {/* Product Info */}
                 <div className="flex items-center justify-between pt-3 pb-1 p-1">
-                  <p className="text-md font-medium font-raleway text-gray-700">{product.productName}</p>
+                  <p className="text-md font-medium font-raleway text-gray-700">
+                    {product.productName}
+                  </p>
                   {product.variants.length > 0 ? (
                     <p className="text-md font-medium font-raleway text-main">
                       ₹{product.variants[0].price}
