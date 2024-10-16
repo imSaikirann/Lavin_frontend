@@ -1,29 +1,29 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../store/Hooks";
 import { Products } from "../types/types";
-import { Link } from "react-router-dom"; 
-import Spinner from "../components/Spinner"; 
-import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import Spinner from "../components/Spinner";
+import { useNavigate } from "react-router-dom";
+import RemoveCartItem from "../assets/bin_icon.png"; // Import as an image, not a component
+
 const Cart = () => {
   const [cart, setCart] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); 
-  const products: Products[] = useAppSelector((state) => state.items); 
+  const [loading, setLoading] = useState<boolean>(true);
+  const products: Products[] = useAppSelector((state) => state.items);
+
   const s3Url = import.meta.env.VITE_S3_URL;
   const navigate = useNavigate();
+  const cartItems = products.filter((product) => cart.includes(product.id));
+
   useEffect(() => {
-   
     setTimeout(() => {
       const storedCart = localStorage.getItem("cart");
       if (storedCart) {
         setCart(JSON.parse(storedCart));
       }
-      setLoading(false); 
-    }, 1000); 
+      setLoading(false);
+    }, 1000);
   }, []);
-
-
-  const cartItems = products.filter((product) => cart.includes(product.id));
-
 
   const removeFromCart = (id: string) => {
     const updatedCart = cart.filter((productId) => productId !== id);
@@ -31,9 +31,8 @@ const Cart = () => {
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-
   const handleCheckout = () => {
-    navigate('/checkout')
+    navigate("/checkout");
   };
 
   return (
@@ -42,55 +41,44 @@ const Cart = () => {
 
       {loading ? (
         <div className="flex justify-center items-center">
-          <Spinner /> 
+          <Spinner />
         </div>
       ) : cartItems.length > 0 ? (
-        <div>
-          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {cartItems.map((product) => (
-              <li key={product.id} className="p-4 bg-white rounded-lg shadow">
-                <Link to={`/product/${product.id}`}>
-                  <div className="overflow-hidden rounded-lg">
-                    {product.images.length > 0 && (
-                      <img
-                        src={`${s3Url}/${product.images[0]}`}
-                        alt={product.productName}
-                        className="w-full h-60 object-cover transition-transform duration-300 hover:scale-105"
-                      />
-                    )}
-                  </div>
-                  <h2 className="mt-4 font-semibold text-lg">{product.productName}</h2>
-                  {product.variants.length > 0 && (
-                    <p className="text-main text-md font-semibold mt-2">
-                      ₹{product.variants[0].price}
-                    </p>
-                  )}
+        <>
+          {cartItems.map((item) => (
+            <div
+              key={item.id}
+              className="border-t border-b text-gray-700 py-4 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4"
+            >
+              <div className="flex items-center gap-4">
+                <img
+                  src={`${s3Url}/${item.images[0]}`} // Display the first image from the array
+                  alt={item.productName}
+                  className="w-16 h-16 object-cover"
+                />
+                <Link to={`/product/${item.id}`} className="font-medium">
+                  {item.productName}
                 </Link>
-                {/* Remove from Cart Button */}
-                <div className="flex flex-row justify-between mt-3">
-                <button
-                  className=" bg-red-500 text-white px-4 py-2 rounded-sm hover:bg-red-600  transition duration-300"
-                  onClick={() => removeFromCart(product.id)}
-                >
-                  Remove from Cart
-                </button>
+              </div>
 
-                <button
-            className=" text-black  border-2 border-black px-6 py-2 rounded-sm hover:bg-black hover:text-white transition duration-300"
-            onClick={handleCheckout}
-          >
-            Checkout
-          </button>
-                </div>
-            
-                
-        
-              </li>
-            ))}
-          </ul>
+              <button
+                onClick={() => removeFromCart(item.id)}
+                className="text-red-500 hover:underline"
+              >
+                <img src={RemoveCartItem} alt="Remove item" className="w-5 h-5" />
+              </button>
+            </div>
+          ))}
 
-         
-        </div>
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={handleCheckout}
+              className="bg-blue-600 text-white py-2 px-6 rounded hover:bg-blue-700"
+            >
+              Checkout
+            </button>
+          </div>
+        </>
       ) : (
         <p className="text-lg">No items in the cart</p>
       )}
