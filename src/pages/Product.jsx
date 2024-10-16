@@ -1,13 +1,13 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
-import { ShopContext } from "../store/ShopContext"; // Ensure the path is correct
+import { ShopContext } from "../store/ShopContext"; 
 
 const Product = () => {
     const { id } = useParams(); 
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-    // Use context and check for null
+ 
     const shopContext = useContext(ShopContext);
     const { products, dataStatus } = shopContext || { products: [], dataStatus: 'loading' }; 
 

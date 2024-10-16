@@ -5,16 +5,21 @@ import axios from "axios";
 export const ShopContext = createContext(null);
 
 export const ShopContextProvider = ({ children }) => {
+  const deliveryFee = 10
   const [products, setProducts] = useState([]);
   const [dataStatus, setDataStatus] = useState("loading");
-
+  const [search,setSearch] = useState('')
+  const [showSearch,setShowSearch] = useState(false)
+  const value = {
+    products,dataStatus, deliveryFee,
+    search,setSearch,showSearch,setShowSearch
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL; 
         const response = await axios.get(`${apiUrl}/api/v1/products/getProducts`); 
-        console.log("rghth")
         setProducts(response.data.data);
         setDataStatus("success");
       } catch (error) {
@@ -27,7 +32,7 @@ export const ShopContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <ShopContext.Provider value={{ products, dataStatus }}>
+    <ShopContext.Provider value={value}>
       {children}
     </ShopContext.Provider>
   );

@@ -1,16 +1,15 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import Logo from '../assets/logo.png';
-import SearchLogo from '../assets/search_icon.png';
-import Profile from '../assets/profile_icon.png';
-import Cart from '../assets/cart_icon.png';
-import Menu from '../assets/menu_icon.png';
-import Back from '../assets/dropdown_icon.png';
-import { useEffect, useState } from 'react';
+import { assets } from '../assets/assets';
+
+import { useContext, useEffect, useState } from 'react';
 import classNames from 'classnames';
+import React from 'react';
+import { ShopContext } from '../store/ShopContext';
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
-    const [cartCount, setCartCount] = useState(0); // Change to a number
+    const [cartCount, setCartCount] = useState(0); 
+   const {setShowSearch} = useContext(ShopContext)
     const location = useLocation();
 
     const navItems = [
@@ -22,18 +21,18 @@ const Navbar = () => {
     useEffect(() => {
         const cart = localStorage.getItem("cart");
 
-        // Parse the cart data or default to an empty array if the cart is null
+    
         const parsedCart = cart ? JSON.parse(cart) : [];
 
-        // Update cart count based on the number of items in the cart
+  
         setCartCount(parsedCart.length);
     }, []);
 
     return (
         <div className='flex items-center justify-between h-[75px] md:h-[90px] lg:h-[100px] font-medium font-raleway'>
-            <Link to="/"><img src={Logo} alt="Logo" className='w-24 md:w-28 lg:w-32' /></Link>
+            <Link to="/"><img src={assets.logo} alt="Logo" className='w-24 md:w-28 lg:w-32' /></Link>
 
-            {/* Desktop Navigation */}
+         
             <ul className='hidden sm:flex gap-8 text-gray-900'>
                 {navItems.map(item => (
                     <NavLink
@@ -52,14 +51,14 @@ const Navbar = () => {
 
             {/* Action icons */}
             <div className='flex items-center gap-6'>
-                <img src={SearchLogo} alt="Search" className='w-5' />
+                <img src={assets.search_icon} alt="Search" className='w-5'  onClick={()=>setShowSearch(true)}/>
 
                 <div className='group relative'>
-                    <img src={Profile} alt="Profile" className='w-5' />
+                    <img src={assets.profile_icon} alt="Profile" className='w-5' />
                 </div>
 
                 <Link to="/cart" className='relative'>
-                    <img src={Cart} alt="Cart" className='w-5' />
+                    <img src={assets.cart_icon} alt="Cart" className='w-5' />
                     {/* Only show the cart count badge if the cart count is greater than 0 */}
                     {cartCount > 0 && (
                         <p className={`absolute right-[-5px] bottom-[-5px] w-4 text-center bg-black text-white rounded-full aspect-square text-[8px] leading-4`}>
@@ -68,13 +67,13 @@ const Navbar = () => {
                     )}
                 </Link>
 
-                <img onClick={() => setVisible(true)} src={Menu} alt="Menu" className='flex sm:hidden w-5 cursor-pointer' />
+                <img onClick={() => setVisible(true)} src={assets.menu_icon} alt="Menu" className='flex sm:hidden w-5 cursor-pointer' />
             </div>
 
             {/* Mobile Sidebar Menu */}
             <div className={`sm:hidden fixed top-0 right-0 bottom-0 bg-white z-40 transition-transform duration-300 ${visible ? "translate-x-0 w-[100%]" : "translate-x-full w-0"}`}>
                 <div onClick={() => setVisible(!visible)} className='flex p-6 gap-4 items-center cursor-pointer'>
-                    <img src={Back} alt="Back" className='h-4 rotate-180' />
+                    <img src={assets.dropdown_icon} alt="Back" className='h-4 rotate-180' />
                     Back
                 </div>
                 <div className='flex flex-col text-lg'>
