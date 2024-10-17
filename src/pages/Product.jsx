@@ -9,27 +9,42 @@ const Product = () => {
     const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
     const [showInternalPages, setShowInternalPages] = useState(false);
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
-
+    const [cart, setCart] = useState([]); 
     const { products = [], dataStatus = "loading" } = useContext(ShopContext) || {};
 
     const s3Url = import.meta.env.VITE_S3_URL;
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+        setCart(savedCart);
     }, []);
 
     const selectedProduct = products.find((product) => product.id === id) || null;
 
     const handleCart = (id) => {
         try {
-            const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-            if (!cart.includes(id)) {
-                cart.push(id);
-                localStorage.setItem("cart", JSON.stringify(cart));
-                console.log("Product added to cart:", id);
-            } else {
-                console.log("Product is already in the cart");
-            }
+            const selectedVariant = selectedProduct.variants[selectedVariantIndex];
+
+            const updatedCart = [
+                ...cart,
+                {
+                    productId: id,
+                    productName: selectedProduct.productName,
+                    variant: {
+                        index: selectedVariantIndex,
+                        color: selectedVariant.color,
+                        price: selectedVariant.price,
+                        stock: selectedVariant.stock,
+                    }
+                }
+            ];
+            setCart(updatedCart);
+            localStorage.setItem("cart", JSON.stringify(updatedCart)); // Save cart to localStorage
+
+            alert("Product added to cart!");
+
+            console.log("Product added to cart:", updatedCart);
         } catch (error) {
             console.error("Error handling cart:", error);
         }
@@ -51,11 +66,9 @@ const Product = () => {
     };
 
     const handleNextPage = () => {
-        if(currentPageIndex !== selectedProduct.internalPages[0].images.length-1)
-        {
+        if (currentPageIndex !== selectedProduct.internalPages[0].images.length - 1) {
             setCurrentPageIndex(currentPageIndex + 1);
         }
-        
     };
 
     const handlePrevPage = () => {
@@ -99,14 +112,12 @@ const Product = () => {
                                         <button
                                             onClick={handlePrevPage}
                                             className={`px-4 py-2 bg-orange-500 text-white rounded ${currentPageIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                           
                                         >
                                             Prev
                                         </button>
                                         <button
                                             onClick={handleNextPage}
-                                            className={`px-4 py-2 bg-orange-500 text-white rounded cursor-pointer ${currentPageIndex === selectedProduct.internalPages[0].images.length-1? 'opacity-50 cursor-not-allowed' : ''}`}
-                                          
+                                            className={`px-4 py-2 bg-orange-500 text-white rounded cursor-pointer ${currentPageIndex === selectedProduct.internalPages[0].images.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         >
                                             Next
                                         </button>
