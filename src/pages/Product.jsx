@@ -6,8 +6,8 @@ import { ShopContext } from "../store/ShopContext";
 const Product = () => {
     const { id } = useParams(); 
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+    const [selectedVariantIndex, setSelectedVariantIndex] = useState(0); // State to track the selected variant
 
- 
     const shopContext = useContext(ShopContext);
     const { products, dataStatus } = shopContext || { products: [], dataStatus: 'loading' }; 
 
@@ -32,6 +32,11 @@ const Product = () => {
         } catch (error) {
             console.error("Error handling cart:", error);
         }
+    };
+
+    const handleVariantChange = (index) => {
+        setSelectedVariantIndex(index);
+        setSelectedImageIndex(0); // Reset to the first image when changing the variant
     };
 
     return (
@@ -75,7 +80,7 @@ const Product = () => {
 
                                 {selectedProduct.variants.length > 0 ? (
                                     <p className="mt-3 font-semibold text-2xl">
-                                        ₹{selectedProduct.variants[selectedImageIndex].price}
+                                        ₹{selectedProduct.variants[selectedVariantIndex].price}
                                     </p>
                                 ) : (
                                     <p>No variants available</p>
@@ -85,7 +90,7 @@ const Product = () => {
                                 </p>
                                 {selectedProduct.variants.length > 0 ? (
                                     <p className="mt-3 font-semibold text-2xl">
-                                        {selectedProduct.variants[selectedImageIndex].color}
+                                        {selectedProduct.variants[selectedVariantIndex].color}
                                     </p>
                                 ) : (
                                     <p>No variants available</p>
@@ -97,6 +102,25 @@ const Product = () => {
                                 >
                                     Add to Cart
                                 </button>
+
+                                {/* Display internal pages after the first cover image */}
+                                {selectedProduct.internalPages.length > 0 && (
+                                    <div className="mt-5">
+                                        <h2 className="text-xl font-semibold">Internal Pages:</h2>
+                                        <div className="flex overflow-x-auto gap-3 mt-2">
+                                            {selectedProduct.internalPages.map((page, index) => (
+                                                <div key={index} className="flex-shrink-0">
+                                                    <img
+                                                        src={`${s3Url}/${page.images[0]}`}
+                                                        alt={`Internal page ${index + 1}`}
+                                                        className="w-[100px] h-auto cursor-pointer"
+                                                    />
+                                                    <p className="text-center">{page.pageType} ({page.pageCount} pages)</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         ) : (
                             <p>No product found</p>

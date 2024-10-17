@@ -19,8 +19,9 @@ export const ShopContextProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL; 
-        const response = await axios.get(`${apiUrl}/api/v1/products/getProducts`); 
+        const response = await axios.get(`${apiUrl}/api/v1/bookProducts/getProducts`); 
         setProducts(response.data.data);
+      
         
         setDataStatus("success");
       } catch (error) {
