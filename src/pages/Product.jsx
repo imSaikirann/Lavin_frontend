@@ -181,13 +181,23 @@ const Product = () => {
                                     </p>
                                 )}
 
-                                <button
-                                    className="bg-black text-white px-5 py-2 mt-5 cursor-pointer rounded-lg transition duration-200 hover:bg-gray-800"
+                               <div className="flex gap-4">
+                               <button
+                                    className="bg-white text-black border-2 border-black px-5 py-2 mt-5 cursor-pointer rounded-lg transition duration-200"
                                     onClick={() => handleCart(selectedProduct.id)}
                                     type="button"
                                 >
                                     Add to Cart
                                 </button>
+
+                                <button
+                                    className="bg-black text-white px-5 py-2 mt-5 cursor-pointer rounded-lg transition duration-200 hover:bg-gray-800"
+                                   
+                                    type="button"
+                                >
+                                    Buy Now
+                                </button>
+                                </div>
                             </div>
                         ) : (
                             <p className="text-red-500">No product found</p>
