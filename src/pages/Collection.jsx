@@ -58,7 +58,7 @@ const Collection = () => {
                   </p>
                   {product.variants.length > 0 ? (
                     <p className="text-md font-medium font-raleway text-main">
-                      ₹{product.variants[0].price}
+                      ₹{product.price}
                     </p>
                   ) : (
                     <p className="text-md font-medium font-raleway text-main">N/A</p>
