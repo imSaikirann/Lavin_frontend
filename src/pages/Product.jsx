@@ -49,9 +49,11 @@ const Product = () => {
     };
 
     const handleNextPage = () => {
-        if (currentPageIndex < selectedProduct.internalPages.length - 1) {
+        if(currentPageIndex !== selectedProduct.internalPages[0].images.length-1)
+        {
             setCurrentPageIndex(currentPageIndex + 1);
         }
+        
     };
 
     const handlePrevPage = () => {
@@ -94,15 +96,15 @@ const Product = () => {
                                     <div className="flex justify-between mt-4">
                                         <button
                                             onClick={handlePrevPage}
-                                            className={`px-4 py-2 bg-blue-500 text-white rounded ${currentPageIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                            disabled={currentPageIndex === 0}
+                                            className={`px-4 py-2 bg-orange-500 text-white rounded ${currentPageIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                           
                                         >
                                             Prev
                                         </button>
                                         <button
                                             onClick={handleNextPage}
-                                            className={`px-4 py-2 bg-blue-500 text-white rounded ${currentPageIndex === selectedProduct.internalPages.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                            disabled={currentPageIndex === selectedProduct.internalPages.length - 1}
+                                            className={`px-4 py-2 bg-orange-500 text-white rounded cursor-pointer ${currentPageIndex === selectedProduct.internalPages[0].images.length-1? 'opacity-50 cursor-not-allowed' : ''}`}
+                                          
                                         >
                                             Next
                                         </button>
@@ -149,8 +151,8 @@ const Product = () => {
                                                 key={index}
                                                 onClick={() => handleVariantChange(index)}
                                                 className={`px-4 py-2 border-2 rounded-lg transition-colors duration-200 
-                                                    ${selectedVariantIndex === index ? 'bg-black text-white border-black' : 'bg-white text-black border-gray-300'} 
-                                                    hover:bg-gray-200 focus:outline-none focus:ring focus:ring-black focus:ring-opacity-50`}
+                                                    ${selectedVariantIndex === index ? 'bg-white text-orange-800 border-orange-500' : 'bg-white text-black border-gray-300'} 
+                                                    `}
                                                 type="button"
                                             >
                                                 {variant.color}
