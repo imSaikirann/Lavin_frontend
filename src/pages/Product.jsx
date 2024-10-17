@@ -40,12 +40,14 @@ const Product = () => {
         setSelectedImageIndex(0);
         setShowInternalPages(false);
         setCurrentPageIndex(0);
+        window.scrollTo(0, 0);
     };
 
     const handleInternalPageClick = (index) => {
         setSelectedImageIndex(index);
         setShowInternalPages(true);
         setCurrentPageIndex(0);
+        window.scrollTo(0, 0);
     };
 
     const handleNextPage = () => {
