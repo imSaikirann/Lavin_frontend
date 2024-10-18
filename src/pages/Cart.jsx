@@ -83,12 +83,14 @@ const Cart = () => {
           ))}
 
           <div className="mt-4 flex justify-end">
-            <button
+         <Link to ="/placeorder">
+         <button
               onClick={handleCheckout}
-              className="bg-blue-600 text-white py-2 px-6 rounded hover:bg-blue-700"
+              className="bg-black text-white py-2 px-6 rounded "
             >
               Checkout
             </button>
+         </Link>
           </div>
         </>
       ) : (
