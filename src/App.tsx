@@ -9,6 +9,7 @@ import Cart from "./pages/Cart"
 import Checkout from "./pages/Checkout"
 import React from "react"
 import { Search } from "./pages/Search"
+import PlaceOrder from "./pages/PlaceOrder"
 function App() {
  
 
@@ -24,6 +25,7 @@ function App() {
       <Route path="/product/:id" element={<Product/>}></Route>
       <Route path="/cart" element={<Cart/>}></Route>
       <Route path="/checkout" element={<Checkout/>}></Route>
+      <Route path="/placeorder" element={<PlaceOrder/>}></Route>
     </Routes>
     <Footer/>
   </div>

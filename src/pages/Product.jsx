@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { ShopContext } from "../store/ShopContext";
 
@@ -216,13 +216,15 @@ const Product = () => {
                                     Add to Cart
                                 </button>
 
-                                <button
+                               <Link to="/placeorder">
+                               <button
                                     className="bg-black text-white px-5 py-2 mt-5 cursor-pointer rounded-lg transition duration-200 hover:bg-gray-800"
                                    
                                     type="button"
                                 >
                                     Buy Now
                                 </button>
+                               </Link>
                                 </div>
                             </div>
                         ) : (
