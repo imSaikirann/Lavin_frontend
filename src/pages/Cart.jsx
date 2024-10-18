@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import RemoveCartItem from "../assets/bin_icon.png";
 import { ShopContext } from "../store/ShopContext";
+import { Input } from "../components/Input";
 
 const Cart = () => {
   const { products = [], dataStatus = "loading" } = useContext(ShopContext);
@@ -69,10 +70,13 @@ const Cart = () => {
                 </Link>
               </div>
 
-              <p className="text-lg text-green-600">
-                ₹{item.selectedVariant.price} (Stock: {item.selectedVariant.stock})
-              </p>
+            <div>
+            <input
+            type="number"
+            defaultValue={1}
+            className='border border-gray-300 rounded py-2 px-4 w-20 focus:outline-none focus:border-orange-400'></input>
 
+            </div>
               <button
                 onClick={() => removeFromCart(item.id, item.selectedVariant.index)}
                 className="text-red-500 hover:underline"
