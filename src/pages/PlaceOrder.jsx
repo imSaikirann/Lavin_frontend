@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { assets } from '../assets/assets';
 import CartTotal from '../components/CartTotal';
+import { Input } from '../components/Input';
 
 const PlaceOrder = () => {
     const [method, setMethod] = useState("cod");
@@ -15,47 +16,26 @@ const PlaceOrder = () => {
                     Delivery Information
                 </div>
                 <div className='flex gap-4'>
-                    <input
-                        type="text"
-                        placeholder='First Name'
-                        className='border border-gray-300 rounded py-2 px-4 w-full focus:outline-none focus:border-orange-400'></input>
-                    <input
-                        type="text"
-                        placeholder='Last Name'
-                        className='border border-gray-300 rounded py-2 px-4 w-full focus:outline-none focus:border-orange-400'></input>
+                    <Input type={"text"} placeholder={'First Name'}/>
+                    <Input type={"text"} placeholder={'Last Name'}/>
+
                 </div>
-                <input
-                    type="email"
-                    placeholder='Email address'
-                    className='border border-gray-300 rounded py-2 px-4 w-full focus:outline-none focus:border-orange-400'></input>
-                <input
-                    type="text"
-                    placeholder='Street'
-                    className='border border-gray-300 rounded py-2 px-4 w-full focus:outline-none focus:border-orange-400'></input>
+                <Input type={"email"} placeholder={'Email address'}/>
+                <Input type={"text"} placeholder={'Street'}/>
+
                 <div className='flex gap-4'>
-                    <input
-                        type="text"
-                        placeholder='City'
-                        className='border border-gray-300 rounded py-2 px-4 w-full focus:outline-none focus:border-orange-400'></input>
-                    <input
-                        type="text"
-                        placeholder='State'
-                        className='border border-gray-300 rounded py-2 px-4 w-full focus:outline-none focus:border-orange-400'></input>
+                <Input type={"text"} placeholder={'City'}/>
+                <Input type={"text"} placeholder={'State'}/>
+
                 </div>
                 <div className='flex gap-4'>
-                    <input
-                        type="number"
-                        placeholder='Zip code'
-                        className='border border-gray-300 rounded py-2 px-4 w-full focus:outline-none focus:border-orange-400'></input>
-                    <input
-                        type="text"
-                        placeholder='Country'
-                        className='border border-gray-300 rounded py-2 px-4 w-full focus:outline-none focus:border-orange-400'></input>
+                <Input type={"number"} placeholder={'Pin code'}/>
+                <Input type={"number"} placeholder={'Country'}/>
+
                 </div>
-                <input
-                    type="number"
-                    placeholder='Phone'
-                    className='border border-gray-300 rounded py-2 px-4 w-full focus:outline-none focus:border-orange-400'></input>
+                <Input type={"number"} placeholder={'Phone'}/>
+
+              
             </div>
 
             {/* Payment Method */}
