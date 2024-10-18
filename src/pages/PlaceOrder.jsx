@@ -6,7 +6,7 @@ const PlaceOrder = () => {
     const [method, setMethod] = useState("cod");
     useEffect(()=>{
         window.scrollTo(0, 0);
-    })
+    },[])
     return (
         <div className='flex flex-col sm:flex-row justify-between gap-6 pt-8 sm:pt-14 min-h-[80vh] border-t px-4 font-poppins'>
             {/* Delivery Information */}
