@@ -25,30 +25,56 @@ const Product = () => {
     const handleCart = (id) => {
         try {
             const selectedVariant = selectedProduct.variants[selectedVariantIndex];
-
-            const updatedCart = [
-                ...cart,
-                {
-                    productId: id,
-                    productName: selectedProduct.productName,
-                    variant: {
-                        index: selectedVariantIndex,
-                        color: selectedVariant.color,
-                        price: selectedVariant.price,
-                        stock: selectedVariant.stock,
-                    }
-                }
-            ];
+    
+            // Check if the product with the same variant already exists in the cart
+            const existingProductIndex = cart.findIndex(
+                (item) => item.productId === id && item.variant.index === selectedVariantIndex
+            );
+    
+            let updatedCart;
+    
+            if (existingProductIndex >= 0) {
+                // Update the existing product's stock or quantity
+                updatedCart = cart.map((item, index) =>
+                    index === existingProductIndex
+                        ? {
+                              ...item,
+                              variant: {
+                                  ...item.variant,
+                                  // Update stock or modify quantity as per your logic
+                                  stock: item.variant.stock + 1, // For example, increasing the stock or quantity
+                              },
+                          }
+                        : item
+                );
+            } else {
+                // If product doesn't exist, add it to the cart
+                updatedCart = [
+                    ...cart,
+                    {
+                        productId: id,
+                        productName: selectedProduct.productName,
+                        variant: {
+                            index: selectedVariantIndex,
+                            color: selectedVariant.color,
+                            price: selectedVariant.price,
+                            stock: selectedVariant.stock,
+                        },
+                    },
+                ];
+            }
+    
             setCart(updatedCart);
-            localStorage.setItem("cart", JSON.stringify(updatedCart)); // Save cart to localStorage
-
+            localStorage.setItem("cart", JSON.stringify(updatedCart));
+    
             alert("Product added to cart!");
-
+    
             console.log("Product added to cart:", updatedCart);
         } catch (error) {
             console.error("Error handling cart:", error);
         }
     };
+    
 
     const handleVariantChange = (index) => {
         setSelectedVariantIndex(index);

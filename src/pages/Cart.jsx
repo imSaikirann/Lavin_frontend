@@ -23,9 +23,11 @@ const Cart = () => {
     }, 1000);
   }, []);
 
-  // Remove item from cart
-  const removeFromCart = (id) => {
-    const updatedCart = cart.filter((item) => item.productId !== id);
+  // Remove from cart by productId and variant index
+  const removeFromCart = (productId, variantIndex) => {
+    const updatedCart = cart.filter(
+      (item) => !(item.productId === productId && item.variant.index === variantIndex)
+    );
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
@@ -38,10 +40,8 @@ const Cart = () => {
   // Map through cart and find product + its selected variant index
   const cartItems = cart.map(({ productId, variant }) => {
     const product = products.find((p) => p.id === productId);
-    return product
-      ? { ...product, selectedVariant: variant }
-      : null;
-  }).filter(Boolean); // Filter out null values if product is missing
+    return product ? { ...product, selectedVariant: variant } : null;
+  }).filter(Boolean);
 
   return (
     <div className="my-10 px-4 md:px-8 max-w-screen-xl mx-auto">
@@ -74,7 +74,7 @@ const Cart = () => {
               </p>
 
               <button
-                onClick={() => removeFromCart(item.id)}
+                onClick={() => removeFromCart(item.id, item.selectedVariant.index)}
                 className="text-red-500 hover:underline"
               >
                 <img src={RemoveCartItem} alt="Remove from cart" className="w-6 h-6" />
