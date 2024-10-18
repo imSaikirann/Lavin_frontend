@@ -5,12 +5,14 @@ import axios from "axios";
 export const ShopContext = createContext(null);
 
 export const ShopContextProvider = ({ children }) => {
+  const currency = "₹"
   const deliveryFee = 10
   const [products, setProducts] = useState([]);
   const [dataStatus, setDataStatus] = useState("loading");
   const [search,setSearch] = useState('')
   const [showSearch,setShowSearch] = useState(false)
   const value = {
+    currency,
     products,dataStatus, deliveryFee,
     search,setSearch,showSearch,setShowSearch
   }
