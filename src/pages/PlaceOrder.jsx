@@ -63,25 +63,10 @@ const PlaceOrder = () => {
                <div>
                 <CartTotal/>
                </div>
-                <div className='text-2xl font-bold mt-6 mb-6'>
-                    Payment Method
-                </div>
-                <div className='flex flex-col gap-4'>
-                    <div onClick={() => setMethod('razorpay')} className='flex items-center gap-3 border p-4 cursor-pointer rounded-md hover:shadow-lg'>
-                        <p className={`w-5 h-5 border rounded-full flex items-center justify-center ${method === 'razorpay' ? "bg-green-400" : ''}`}>
-                            {method === 'razorpay' && <span className="w-3 h-3 bg-white rounded-full"></span>}
-                        </p>
-                        <img className='h-6' src={assets.razorpay_logo} alt='Razorpay Logo' />
-                    </div>
-                    <div onClick={() => setMethod('cod')} className='flex items-center gap-3 border p-4 cursor-pointer rounded-md hover:shadow-lg'>
-                        <p className={`w-5 h-5 border rounded-full flex items-center justify-center ${method === 'cod' ? "bg-green-400" : ''}`}>
-                            {method === 'cod' && <span className="w-3 h-3 bg-white rounded-full"></span>}
-                        </p>
-                        <p className='text-gray-600 text-sm font-medium'>
-                            Cash On Delivery
-                        </p>
-                    </div>
-                    <button className='px-4 py-3 rounded-sm bg-black text-white'>Place Order</button>
+
+                <div className='flex flex-col gap-4 mt-4'>
+                    
+                    <button className='px-4 py-3 rounded-sm bg-black text-white hover:shadow-lg'>Place Order</button>
                 </div>
             </div>
         </div>
