@@ -124,7 +124,7 @@ const Product = () => {
                 </h1>
 
                 {selectedProduct.variants.length > 0 ? (
-                  <p className="mt-3 font-bold text-3xl text-green-600">
+                  <p className="mt-3 font-bold text-3xl text-gray-900">
                     ₹{selectedProduct.price} {/* Display the price */}
                   </p>
                 ) : (
@@ -149,7 +149,7 @@ const Product = () => {
                         key={index}
                         onClick={() => handleVariantChange(index)}
                         className={`px-4 py-2 border-2 rounded-lg transition-colors duration-200 
-                          ${selectedVariantIndex === index ? 'bg-white text-orange-800 border-orange-500' : 'bg-white text-black border-gray-300'}`}
+                          ${selectedVariantIndex === index ? 'bg-white text-black border-orange-500' : 'bg-white text-black border-gray-300'}`}
                       >
                         {variant.color}
                       </button>
@@ -157,12 +157,13 @@ const Product = () => {
                   </div>
                 )}
 
-                <p className="mt-2 text-gray-700">
+                <p className="mt-4 text-gray-700">
                   Stock available: {selectedProduct.variants[selectedVariantIndex]?.stock}
                 </p>
 
-                {/* Quantity Input */}
-                <div className="mt-4">
+               <div className="flex justify-between">
+                 {/* Quantity Input */}
+                 <div className="mt-4">
                   <label htmlFor="quantity" className="block text-gray-700">Quantity:</label>
                   <input
                     type="number"
@@ -173,10 +174,23 @@ const Product = () => {
                     min="1"
                   />
                 </div>
+                 
+                 <div className="mt-4">
+                  <label htmlFor="pincode" className="block text-gray-700">Enter Your Delivery Pincode:</label>
+                  <input
+                    type="text"
+                    id="pincode"
+                    placeholder="Pin code"
+                    className="border border-gray-300 rounded py-2 px-4 w-52 focus:outline-none focus:border-orange-400"
+                   
+                  />
+                </div>
+                </div>
 
-                <div className="flex gap-4 mt-4">
+
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-10">
                   <button
-                    className="bg-white text-black border-2 border-black px-5 py-2 mt-5 cursor-pointer rounded-lg transition duration-200"
+                    className="bg-white text-black border-2 w-full sm:w-60 border-black px-5 py-3 cursor-pointer rounded-lg transition duration-200"
                     onClick={addToCart} 
                   >
                     Add to Cart
@@ -184,7 +198,7 @@ const Product = () => {
 
                   <Link to="/placeorder">
                     <button
-                      className="bg-black text-white px-5 py-2 mt-5 cursor-pointer rounded-lg transition duration-200 hover:bg-gray-800"
+                      className="bg-black text-white px-5  w-full sm:w-60 py-3  cursor-pointer rounded-lg transition duration-200 hover:bg-gray-800"
                     >
                       Buy Now
                     </button>
