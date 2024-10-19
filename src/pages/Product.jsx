@@ -28,7 +28,7 @@ const Product = () => {
     setSelectedImageIndex(0);
     setShowInternalPages(false);
     setCurrentPageIndex(0);
-    setQuantity(1); // Reset quantity when variant changes
+    setQuantity(1); 
     window.scrollTo(0, 0);
   };
 

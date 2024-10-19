@@ -34,25 +34,25 @@ export const ShopContextProvider = ({ children }) => {
     try {
       const selectedVariant = selectedProduct.variants[selectedVariantIndex];
 
-      // Check if the product with the same variant already exists in the cart
+
       const existingProductIndex = cart.findIndex(
-        (item) => item.productId === id && item.variant.id === selectedVariant.id // Fixed the comparison
+        (item) => item.productId === id && item.variant.id === selectedVariant.id 
       );
 
       let updatedCart;
 
       if (existingProductIndex >= 0) {
-        // If it exists, update the quantity
+      
         updatedCart = cart.map((item, index) =>
           index === existingProductIndex
             ? {
                 ...item,
-                quantity: item.quantity + quantity, // Update quantity
+                quantity: item.quantity + quantity,
               }
             : item
         );
       } else {
-        // If it doesn't exist, add it to the cart
+     
         updatedCart = [
           ...cart,
           {

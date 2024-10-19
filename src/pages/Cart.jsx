@@ -1,29 +1,30 @@
-import { useContext,useEffect,useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../store/ShopContext";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { assets } from "../assets/assets";
 
 const Cart = () => {
-  const { dataStatus, cart } = useContext(ShopContext);
+  const { dataStatus, cart,products } = useContext(ShopContext);
+
   const [loading, setLoading] = useState(false);
-  const [quantities, setQuantities] = useState({});
   const navigate = useNavigate();
   const s3Url = import.meta.env.VITE_S3_URL;
 
-  console.log(cart)
-
-  
-
-  const handleQuantityChange = (productId, variantId, newQuantity) => {
-    setQuantities((prevQuantities) => ({
-      ...prevQuantities,
-      [`${productId}-${variantId}`]: newQuantity,
-    }));
-  };
-
   const handleCheckout = () => {
     navigate("/checkout");
+  };
+
+  const getProductImage = (productId, variantIndex) => {
+
+    const product = products.find((product) => product.id === productId);
+ 
+
+    if (product && product.images && product.images[variantIndex]) {
+      return `${s3Url}/${product.images[variantIndex]}`;
+    }
+
+
   };
 
   return (
@@ -42,10 +43,9 @@ const Cart = () => {
               className="border-t border-b text-gray-700 py-4 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4"
             >
               <div className="flex items-center gap-4">
-                {/* Check if images exist before accessing them */}
+                {/* Retrieve image using getProductImage */}
                 <img
-                  src={item.variant.images && item.variant.images.length > 0 ? 
-                      `${s3Url}/${item.images[0]}` : "default_image_url"} // Fallback image
+                  src={getProductImage(item.productId, item.varientIndex)}
                   alt={item.productName}
                   className="w-16 h-16 object-cover"
                 />
@@ -57,19 +57,13 @@ const Cart = () => {
               <div>
                 <input
                   type="number"
-                  value={quantities[`${item.productId}-${item.variant.id}`] || 1}
-                  onChange={(e) =>
-                    handleQuantityChange(item.productId, item.variant.id, Math.max(1, Number(e.target.value)))
-                  }
+                  value={item.quantity}
                   className="border border-gray-300 rounded py-2 px-4 w-20 focus:outline-none focus:border-orange-400"
                   min="1"
                 />
               </div>
 
-              <button
-               
-                className="text-red-500 hover:underline"
-              >
+              <button className="text-red-500 hover:underline">
                 <img src={assets.bin_icon} alt="Remove from cart" className="w-6 h-6" />
               </button>
             </div>
