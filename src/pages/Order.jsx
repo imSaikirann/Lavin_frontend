@@ -63,14 +63,12 @@ const Order = () => {
                 className="text-red-500 hover:underline"
                 onClick={() => handleRemove(item.productId, item.variant.id)}
               >
-                <img src={assets.bin_icon} alt="Remove from cart" className="w-6 h-6" />
+                <img src={assets.bin_icon} alt="Remove from cart" className="w-4 h-4" />
               </button>
             </div>
           ))}
 
-          <div className="mt-8">
-            <CartTotal />
-          </div>
+         
 
           <div className="mt-10">
             <h2 className="text-lg font-medium">Shipping Information</h2>
@@ -105,7 +103,7 @@ const Order = () => {
               </div>
               <button
                 type="button"
-                className="bg-black text-white px-5 py-3 cursor-pointer rounded-lg transition duration-200 hover:bg-gray-800"
+                className="bg-black text-white px-5 w-full sm:w-48 py-3 cursor-pointer rounded-lg transition duration-200 hover:bg-gray-800"
                 onClick={handleConfirmOrder}
               >
                 Confirm Order

@@ -12,6 +12,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const s3Url = import.meta.env.VITE_S3_URL;
 
+  console.log(cart)
   const handleCheckout = () => {
     navigate("/checkout");
   };
@@ -54,9 +55,12 @@ const Cart = () => {
                   alt={item.productName}
                   className="w-16 h-16 object-cover"
                 />
-                <Link to={`/product/${item.productId}`} className="font-medium">
-                  {item.productName} - {item.variant.color}
+               <div className="flex flex-col">
+               <Link to={`/product/${item.productId}`} className="font-medium">
+                   {item.variant.color}
                 </Link>
+                <h2>{item.productPrice}</h2>
+               </div>
               </div>
 
               <div>
@@ -73,7 +77,7 @@ const Cart = () => {
                 className="text-red-500 hover:underline"
                 onClick={() => handleRemove(item.productId, item.variant.id)}
               >
-                <img src={assets.bin_icon} alt="Remove from cart" className="w-6 h-6" />
+                <img src={assets.bin_icon} alt="Remove from cart" className="w-4 h-4" />
               </button>
             </div>
           ))}
