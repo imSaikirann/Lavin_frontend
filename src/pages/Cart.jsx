@@ -82,8 +82,13 @@ const Cart = () => {
             </div>
           ))}
 
-          <div className="mt-8">
+          <div className="mt-8 w-1/2">
             <CartTotal />
+            <div className='flex flex-col gap-4 mt-4'>
+                    
+                    <Link to="/placeorder">
+                    <button className='px-4 py-3 rounded-sm w-full bg-black text-white hover:shadow-lg'>Order Now</button></Link>
+                 </div>
           </div>
         </>
       ) : (
