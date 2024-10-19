@@ -164,16 +164,21 @@ const Product = () => {
                <div className="flex justify-between">
                  {/* Quantity Input */}
                  <div className="mt-4">
-                  <label htmlFor="quantity" className="block text-gray-700">Quantity:</label>
-                  <input
-                    type="number"
-                    id="quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(Math.max(1, e.target.value))} 
-                    className="border border-gray-300 rounded py-2 px-4 w-20 focus:outline-none focus:border-orange-400"
-                    min="1"
-                  />
-                </div>
+  <label htmlFor="quantity" className="block text-gray-700">
+    Quantity:
+  </label>
+  <input
+    type="number"
+    id="quantity"
+    value={quantity}
+    onChange={(e) => setQuantity(Math.max(1, e.target.value))}
+    className="border border-gray-300 rounded py-2 px-4 w-20 focus:outline-none focus:border-orange-400 appearance-auto" 
+    min="1"
+    step="1" // Make sure step is set for increment behavior
+    inputMode="numeric" // Ensures proper mobile keyboard
+  />
+</div>
+
                  
                  <div className="mt-4">
                   <label htmlFor="pincode" className="block text-gray-700">Enter Your Delivery Pincode:</label>
