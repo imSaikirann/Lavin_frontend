@@ -30,7 +30,9 @@ export const ShopContextProvider = ({ children }) => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  
+  const removeFromCart = (productId, variantId) => {
+    setCart((prevCart) => prevCart.filter(item => !(item.productId === productId && item.variant.id === variantId)));
+  };
 
   const handleCart = (id, selectedProduct, selectedVariantIndex, quantity,productPrice) => {
     try {
@@ -90,6 +92,18 @@ export const ShopContextProvider = ({ children }) => {
     fetchData();
   }, []);
 
+  // Add this function inside ShopContextProvider
+const updateCartQuantity = (productId, variantId, newQuantity) => {
+  setCart((prevCart) =>
+    prevCart.map((item) =>
+      item.productId === productId && item.variant.id === variantId
+        ? { ...item, quantity: newQuantity }
+        : item
+    )
+  );
+};
+
+
   const value = {
     currency,
     products,
@@ -102,6 +116,8 @@ export const ShopContextProvider = ({ children }) => {
     cartCount,
     cart,
     handleCart,
+    removeFromCart,
+    updateCartQuantity
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
