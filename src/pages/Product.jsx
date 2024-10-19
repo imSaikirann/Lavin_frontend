@@ -10,8 +10,7 @@ const Product = () => {
   const [showInternalPages, setShowInternalPages] = useState(false);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [cart, setCart] = useState([]);
-  const [quantity, setQuantity] = useState(1); 
-  
+  const [quantity, setQuantity] = useState(1);
 
   const { products = [], dataStatus = "loading", handleCart } = useContext(ShopContext) || {};
   const s3Url = import.meta.env.VITE_S3_URL;
@@ -53,7 +52,8 @@ const Product = () => {
   };
 
   const addToCart = () => {
-    handleCart(id, selectedProduct, selectedVariantIndex, quantity); 
+    const productPrice = selectedProduct.price; // Get the product price
+    handleCart(id, selectedProduct, selectedVariantIndex, quantity, productPrice); // Pass price as parameter
   };
 
   return (
@@ -125,7 +125,7 @@ const Product = () => {
 
                 {selectedProduct.variants.length > 0 ? (
                   <p className="mt-3 font-bold text-3xl text-green-600">
-                    ₹{selectedProduct.price}
+                    ₹{selectedProduct.price} {/* Display the price */}
                   </p>
                 ) : (
                   <p className="text-red-500">No variants available</p>

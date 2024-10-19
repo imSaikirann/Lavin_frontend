@@ -23,14 +23,16 @@ export const ShopContextProvider = ({ children }) => {
 
   // Recalculate cart count whenever cart changes
   useEffect(() => {
-    console.log("Current Cart:", cart); // Debugging line
+    console.log("Current Cart:", cart); 
     const totalCartCount = cart.reduce((acc, item) => acc + (item.quantity || 0), 0);
     setCartCount(totalCartCount);
-    console.log("Total Cart Count:", totalCartCount); // Debugging line
+    console.log("Total Cart Count:", totalCartCount); 
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  const handleCart = (id, selectedProduct, selectedVariantIndex, quantity) => {
+  
+
+  const handleCart = (id, selectedProduct, selectedVariantIndex, quantity,productPrice) => {
     try {
       const selectedVariant = selectedProduct.variants[selectedVariantIndex];
 
@@ -59,7 +61,8 @@ export const ShopContextProvider = ({ children }) => {
             productId: id,
             variant: selectedVariant,
             quantity: quantity, 
-            varientIndex:selectedVariantIndex
+            varientIndex:selectedVariantIndex,
+            productPrice:productPrice
           },
         ];
       }

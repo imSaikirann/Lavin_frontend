@@ -3,6 +3,7 @@ import { ShopContext } from "../store/ShopContext";
 import { useNavigate, Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { assets } from "../assets/assets";
+import CartTotal from'../components/CartTotal'
 
 const Cart = () => {
   const { dataStatus, cart,products } = useContext(ShopContext);
@@ -69,14 +70,10 @@ const Cart = () => {
             </div>
           ))}
 
-          <div className="mt-4 flex justify-end">
-            <button
-              onClick={handleCheckout}
-              className="bg-black text-white py-2 px-6 rounded hover:bg-gray-800 transition duration-300"
-            >
-              Checkout
-            </button>
-          </div>
+        <div className="mt-8">
+          
+         <CartTotal/>
+        </div>
         </>
       ) : (
         <p className="text-lg">Your cart is empty.</p>
