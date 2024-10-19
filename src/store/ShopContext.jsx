@@ -1,30 +1,82 @@
-import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-
+import { createContext, useState, useEffect } from "react";
 
 export const ShopContext = createContext(null);
 
 export const ShopContextProvider = ({ children }) => {
-  const currency = "₹"
-  const deliveryFee = 10
+  const currency = "₹";
+  const deliveryFee = 10;
   const [products, setProducts] = useState([]);
   const [dataStatus, setDataStatus] = useState("loading");
-  const [search,setSearch] = useState('')
-  const [showSearch,setShowSearch] = useState(false)
-  const value = {
-    currency,
-    products,dataStatus, deliveryFee,
-    search,setSearch,showSearch,setShowSearch
-  }
+  const [search, setSearch] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [cart, setCart] = useState([]);
+
+  // Retrieve cart from localStorage on mount
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    const parsedCart = storedCart ? JSON.parse(storedCart) : [];
+    console.log("Parsed Cart:", parsedCart); // Debugging line
+    setCart(parsedCart);
+  }, []);
+
+  // Recalculate cart count whenever cart changes
+  useEffect(() => {
+    console.log("Current Cart:", cart); // Debugging line
+    const totalCartCount = cart.reduce((acc, item) => acc + (item.quantity || 0), 0);
+    setCartCount(totalCartCount);
+    console.log("Total Cart Count:", totalCartCount); // Debugging line
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  const handleCart = (id, selectedProduct, selectedVariantIndex, quantity) => {
+    try {
+      const selectedVariant = selectedProduct.variants[selectedVariantIndex];
+
+      // Check if the product with the same variant already exists in the cart
+      const existingProductIndex = cart.findIndex(
+        (item) => item.productId === id && item.variant.id === selectedVariant.id // Fixed the comparison
+      );
+
+      let updatedCart;
+
+      if (existingProductIndex >= 0) {
+        // If it exists, update the quantity
+        updatedCart = cart.map((item, index) =>
+          index === existingProductIndex
+            ? {
+                ...item,
+                quantity: item.quantity + quantity, // Update quantity
+              }
+            : item
+        );
+      } else {
+        // If it doesn't exist, add it to the cart
+        updatedCart = [
+          ...cart,
+          {
+            productId: id,
+            variant: selectedVariant,
+            quantity: quantity, 
+            varientIndex:selectedVariantIndex
+          },
+        ];
+      }
+
+      setCart(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+    } catch (error) {
+      console.error("Failed to add to cart:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = import.meta.env.VITE_API_URL; 
-        const response = await axios.get(`${apiUrl}/api/v1/bookProducts/getProducts`); 
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const response = await axios.get(`${apiUrl}/api/v1/bookProducts/getProducts`);
         setProducts(response.data.data);
-      
-        
         setDataStatus("success");
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -35,11 +87,21 @@ export const ShopContextProvider = ({ children }) => {
     fetchData();
   }, []);
 
-  return (
-    <ShopContext.Provider value={value}>
-      {children}
-    </ShopContext.Provider>
-  );
+  const value = {
+    currency,
+    products,
+    dataStatus,
+    deliveryFee,
+    search,
+    setSearch,
+    showSearch,
+    setShowSearch,
+    cartCount,
+    cart,
+    handleCart,
+  };
+
+  return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
 };
 
 export default ShopContextProvider;

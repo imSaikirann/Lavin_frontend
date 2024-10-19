@@ -8,8 +8,8 @@ import { ShopContext } from '../store/ShopContext';
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
-    const [cartCount, setCartCount] = useState(0); 
-   const {setShowSearch} = useContext(ShopContext)
+
+   const {setShowSearch,cartCount} = useContext(ShopContext)
     const location = useLocation();
 
     const navItems = [
@@ -18,15 +18,7 @@ const Navbar = () => {
         { name: "About", href: "/about" },
     ];
 
-    useEffect(() => {
-        const cart = localStorage.getItem("cart");
 
-    
-        const parsedCart = cart ? JSON.parse(cart) : [];
-
-  
-        setCartCount(parsedCart.length);
-    }, []);
 
     return (
         <div className='flex items-center justify-between h-[75px] md:h-[90px] lg:h-[100px] font-medium font-raleway'>
