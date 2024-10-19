@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { assets } from '../assets/assets';
 import CartTotal from '../components/CartTotal';
 import { Input } from '../components/Input';
+import { Link } from 'react-router-dom';
 
 const PlaceOrder = () => {
     const [method, setMethod] = useState("cod");
@@ -46,7 +47,8 @@ const PlaceOrder = () => {
 
                 <div className='flex flex-col gap-4 mt-4'>
                     
-                    <button className='px-4 py-3 rounded-sm bg-black text-white hover:shadow-lg'>Place Order</button>
+                   <Link to="/orders">
+                   <button className='px-4 py-3 rounded-sm bg-black text-white hover:shadow-lg'>Place Order</button></Link>
                 </div>
             </div>
         </div>

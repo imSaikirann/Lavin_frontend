@@ -10,6 +10,7 @@ import Checkout from "./pages/Checkout"
 import React from "react"
 import { Search } from "./pages/Search"
 import PlaceOrder from "./pages/PlaceOrder"
+import Order from "./pages/Order"
 function App() {
  
 
@@ -26,6 +27,8 @@ function App() {
       <Route path="/cart" element={<Cart/>}></Route>
       <Route path="/checkout" element={<Checkout/>}></Route>
       <Route path="/placeorder" element={<PlaceOrder/>}></Route>
+      <Route path="/orders" element={<Order/>}></Route>
+
     </Routes>
     <Footer/>
   </div>
