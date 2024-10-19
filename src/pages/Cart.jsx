@@ -13,8 +13,14 @@ const Cart = () => {
 
   console.log(cart)
 
+  
 
-
+  const handleQuantityChange = (productId, variantId, newQuantity) => {
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [`${productId}-${variantId}`]: newQuantity,
+    }));
+  };
 
   const handleCheckout = () => {
     navigate("/checkout");
