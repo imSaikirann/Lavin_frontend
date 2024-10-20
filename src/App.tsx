@@ -11,6 +11,8 @@ import React from "react"
 import { Search } from "./pages/Search"
 import PlaceOrder from "./pages/PlaceOrder"
 import Order from "./pages/Order"
+import Signup from "./pages/Signup"
+import Signin from "./pages/Signin"
 function App() {
  
 
@@ -28,6 +30,10 @@ function App() {
       <Route path="/checkout" element={<Checkout/>}></Route>
       <Route path="/placeorder" element={<PlaceOrder/>}></Route>
       <Route path="/orders" element={<Order/>}></Route>
+      <Route path="/signup" element={<Signup/>}></Route>
+      <Route path="/signin" element={<Signin/>}></Route>
+
+
 
     </Routes>
     <Footer/>

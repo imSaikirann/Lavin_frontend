@@ -46,7 +46,7 @@ const Navbar = () => {
                 <img src={assets.search_icon} alt="Search" className='w-5'  onClick={()=>setShowSearch(true)}/>
 
                 <div className='group relative'>
-                    <img src={assets.profile_icon} alt="Profile" className='w-5' />
+                   <Link to="/Signup"> <img src={assets.profile_icon} alt="Profile" className='w-5' /></Link>
                 </div>
 
                 <Link to="/cart" className='relative'>
