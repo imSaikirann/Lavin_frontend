@@ -63,15 +63,35 @@ const Cart = () => {
                </div>
               </div>
 
-              <div>
+           
+
+              <div className="flex items-center">
+                <button
+                  onClick={() => handleQuantityChange(item.productId, item.variant.id, item.quantity - 1)}
+                  className={`border border-gray-300 rounded-l py-2 px-4 focus:outline-none ${
+                    item.quantity <= 1 ? 'bg-gray-200 cursor-not-allowed' : 'hover:bg-orange-400 hover:text-white'
+                  }`}
+                  disabled={item.quantity <= 1}
+                >
+                  -
+                </button>
                 <input
-                  type="number"
+                  type="text"
+                  id="quantity"
                   value={item.quantity}
                   onChange={(e) => handleQuantityChange(item.productId, item.variant.id, parseInt(e.target.value, 10))}
-                  className="border border-gray-300 rounded py-2 px-4 w-20 focus:outline-none focus:border-orange-400"
-                  min="1"
+                  className="border-t border-b border-gray-300 py-2 px-4 w-16 text-center focus:outline-none focus:border-orange-400"
+                  readOnly
                 />
+                <button
+                  onClick={() => handleQuantityChange(item.productId, item.variant.id, item.quantity + 1)}
+                  className="border border-gray-300 rounded-r py-2 px-4 focus:outline-none hover:bg-orange-400 hover:text-white"
+               
+                >
+                  +
+                </button>
               </div>
+
 
               <button
                 className="text-red-500 hover:underline"

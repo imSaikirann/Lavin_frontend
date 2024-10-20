@@ -28,7 +28,7 @@ const Product = () => {
     setSelectedImageIndex(0);
     setShowInternalPages(false);
     setCurrentPageIndex(0);
-    setQuantity(1); 
+    setQuantity(1);
     window.scrollTo(0, 0);
   };
 
@@ -161,40 +161,58 @@ const Product = () => {
                   Stock available: {selectedProduct.variants[selectedVariantIndex]?.stock}
                 </p>
 
-               <div className="flex justify-between">
-                 {/* Quantity Input */}
-                 <div className="mt-4">
-  <label htmlFor="quantity" className="block text-gray-700">
-    Quantity:
-  </label>
+                <div className="flex flex-col sm:flex-row justify-between">
+                  {/* Quantity Input */}
+                  <div className="mt-4 flex items-center">
+                    <label htmlFor="quantity" className="block text-gray-700 mr-4">
+                      Quantity:
+                    </label>
+                    <button
+                      onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+                      className={`border border-gray-300 rounded-l py-2 px-4 focus:outline-none ${quantity <= 1 ? 'bg-gray-200 cursor-not-allowed' : 'hover:bg-orange-400 hover:text-white'}`}
+                      disabled={quantity <= 1}
+                    >
+                      -
+                    </button>
+                    <input
+                      type="text"
+                      id="quantity"
+                      value={quantity}
+                      readOnly
+                      className="border-t border-b border-gray-300 py-2 px-4 w-16 text-center focus:outline-none focus:border-orange-400"
+                    />
+                    <button
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="border border-gray-300 rounded-r py-2 px-4 focus:outline-none hover:bg-orange-400 hover:text-white"
+                      disabled={quantity === selectedProduct.variants[selectedVariantIndex]?.stock}
+                    >
+                      +
+                    </button>
+                  </div>
+
+
+
+                  <div className="mt-4 flex items-center">
+  <label htmlFor="pincode" className="block text-gray-700 mr-4">Delivery Pincode:</label>
   <input
     type="text"
-    id="quantity"
-    value={quantity}
-    onChange={(e) => setQuantity(Math.max(1, e.target.value))}
-    className="border border-gray-300 rounded py-2 px-4 w-20 focus:outline-none focus:border-orange-400 appearance-auto" 
-
+    id="pincode"
+    placeholder="Pin code"
+    className="border border-gray-300 rounded py-2 px-4 w-28 focus:outline-none focus:border-orange-400"
+    maxLength={6}
+    onInput={(e) => {
+      e.target.value = e.target.value.replace(/[^0-9]/g, ""); // Replace non-numeric characters
+    }}
   />
 </div>
 
-                 
-                 <div className="mt-4">
-                  <label htmlFor="pincode" className="block text-gray-700">Enter Your Delivery Pincode:</label>
-                  <input
-                    type="text"
-                    id="pincode"
-                    placeholder="Pin code"
-                    className="border border-gray-300 rounded py-2 px-4 w-52 focus:outline-none focus:border-orange-400"
-                   
-                  />
-                </div>
                 </div>
 
 
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-10">
                   <button
                     className="bg-white text-black border-2 w-full sm:w-60 border-black px-5 py-3 cursor-pointer rounded-lg transition duration-200"
-                    onClick={addToCart} 
+                    onClick={addToCart}
                   >
                     Add to Cart
                   </button>
