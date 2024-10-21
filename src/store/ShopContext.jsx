@@ -12,16 +12,18 @@ export const ShopContextProvider = ({ children }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [cart, setCart] = useState([]);
+  const [UserData, setUserData] = useState([]);
+
 
   // Retrieve cart from localStorage on mount
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     const parsedCart = storedCart ? JSON.parse(storedCart) : [];
-    console.log("Parsed Cart:", parsedCart); // Debugging line
+ 
     setCart(parsedCart);
   }, []);
 
-  // Recalculate cart count whenever cart changes
+
   useEffect(() => {
     console.log("Current Cart:", cart); 
     const totalCartCount = cart.reduce((acc, item) => acc + (item.quantity || 0), 0);
@@ -103,6 +105,7 @@ const updateCartQuantity = (productId, variantId, newQuantity) => {
   );
 };
 
+console.log(UserData)
 
   const value = {
     currency,
@@ -117,7 +120,9 @@ const updateCartQuantity = (productId, variantId, newQuantity) => {
     cart,
     handleCart,
     removeFromCart,
-    updateCartQuantity
+    updateCartQuantity,
+    UserData,
+    setUserData
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

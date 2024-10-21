@@ -13,6 +13,7 @@ import PlaceOrder from "./pages/PlaceOrder"
 import Order from "./pages/Order"
 import Signup from "./pages/Signup"
 import Signin from "./pages/Signin"
+import Profile from "./pages/Profile"
 function App() {
  
 
@@ -32,6 +33,8 @@ function App() {
       <Route path="/orders" element={<Order/>}></Route>
       <Route path="/signup" element={<Signup/>}></Route>
       <Route path="/signin" element={<Signin/>}></Route>
+      <Route path="/profile" element={<Profile/>}></Route>
+
 
 
 
