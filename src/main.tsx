@@ -7,7 +7,7 @@ import React from 'react';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
-  throw new Error('Root element not found. Ensure your HTML file has an element with id "root".');
+  throw new Error('Root element not found. Ensure your HTM file has an element with id "root".');
 }
 
 createRoot(rootElement).render(
