@@ -13,7 +13,7 @@ import PlaceOrder from "./pages/PlaceOrder"
 import Signup from "./pages/Signup"
 import Signin from "./pages/Signin"
 import Profile from "./pages/Profile"
-import EmailVerification from "./pages/EmailVerification"
+
 function App() {
  
 
@@ -33,7 +33,7 @@ function App() {
       <Route path="/signup" element={<Signup/>}></Route>
       <Route path="/signin" element={<Signin/>}></Route>
       <Route path="/profile" element={<Profile/>}></Route>
-      <Route path="/auth/verification" element={<EmailVerification/>}></Route>
+    
 
 
 
