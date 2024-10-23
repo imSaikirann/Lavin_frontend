@@ -36,8 +36,16 @@ const Profile = () => {
           <li className="mb-3">
             <a href="/orders" className="text-gray-700 hover:text-red-600 transition duration-200">Orders</a>
           </li>
+
+          
           {/* Add more links as needed */}
         </ul>
+        <button
+              className="w-full mt-6 px-4 py-2 bg-red-600 text-white rounded-md shadow-md hover:bg-red-500 transition duration-200"
+              onClick={() => navigate('/')}
+            >
+              Logout
+            </button>
       </div>
 
       {/* Content Area */}
@@ -58,12 +66,7 @@ const Profile = () => {
               </div>
             )}
 
-            <button
-              className="w-full mt-6 px-4 py-2 bg-red-600 text-white rounded-md shadow-md hover:bg-red-500 transition duration-200"
-              onClick={() => navigate('/')}
-            >
-              Logout
-            </button>
+           
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { provider, auth } from "../Auth/firebase";
 import { ShopContext } from "../store/ShopContext";
 import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc"; // Import Google icon
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Signup = () => {
     try {
       const userCredential = await signInWithPopup(auth, provider);
       const user = userCredential.user;
-      setUserData(user);  // Add setUserData here
+      setUserData(user);
       navigate("/profile");
     } catch (err) {
       setError("An error occurred during Google signup. Please try again.");
@@ -92,9 +93,10 @@ const Signup = () => {
         <div className="mt-4">
           <button
             onClick={handleGoogleSignup}
-            className="w-full px-3 py-2 sm:px-4 sm:py-3 bg-red-500 text-white font-medium rounded-md shadow hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            className="w-full flex items-center justify-center px-3 py-2 sm:px-4 sm:py-3 border-[1px] border-gray-100 text-black  font-medium rounded-md shadow  focus:outline-none "
           >
-            Sign Up with Google
+            <FcGoogle className="mr-2" size={24} /> {/* Google Icon */}
+            Continue with Google
           </button>
         </div>
       </div>
