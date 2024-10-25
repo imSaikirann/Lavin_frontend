@@ -1,4 +1,4 @@
-export const Input = ({ type, name, value, onChange, placeholder }) => {
+export const Input = ({ type, name, value, onChange, placeholder, ...props }) => {
     return (
         <input
             type={type}
@@ -7,6 +7,7 @@ export const Input = ({ type, name, value, onChange, placeholder }) => {
             onChange={onChange}
             placeholder={placeholder}
             className='border border-gray-300 rounded py-2 px-4 w-full focus:outline-none focus:border-orange-400'
+            {...props}  
         />
     );
 };

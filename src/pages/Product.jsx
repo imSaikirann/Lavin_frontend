@@ -125,7 +125,7 @@ const Product = () => {
 
                 {selectedProduct.variants.length > 0 ? (
                   <p className="mt-3 font-bold text-3xl text-gray-900">
-                    ₹{selectedProduct.price} {/* Display the price */}
+                    ₹{selectedProduct.price}
                   </p>
                 ) : (
                   <p className="text-red-500">No variants available</p>
@@ -193,18 +193,18 @@ const Product = () => {
 
 
                   <div className="mt-4 flex items-center">
-  <label htmlFor="pincode" className="block text-gray-700 mr-4">Delivery Pincode:</label>
-  <input
-    type="text"
-    id="pincode"
-    placeholder="Pin code"
-    className="border border-gray-300 rounded py-2 px-4 w-28 focus:outline-none focus:border-orange-400"
-    maxLength={6}
-    onInput={(e) => {
-      e.target.value = e.target.value.replace(/[^0-9]/g, ""); // Replace non-numeric characters
-    }}
-  />
-</div>
+                    <label htmlFor="pincode" className="block text-gray-700 mr-4">Delivery Pincode:</label>
+                    <input
+                      type="text"
+                      id="pincode"
+                      placeholder="Pin code"
+                      className="border border-gray-300 rounded py-2 px-4 w-28 focus:outline-none focus:border-orange-400"
+                      maxLength={6}
+                      onInput={(e) => {
+                        e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                      }}
+                    />
+                  </div>
 
                 </div>
 

@@ -6,6 +6,7 @@ const Profile = () => {
   const { UserData } = useContext(ShopContext);
   const navigate = useNavigate();
 
+  // Redirect to signup if no user data is available
   if (!UserData) {
     navigate('/signup');
     return null;
@@ -36,16 +37,14 @@ const Profile = () => {
           <li className="mb-3">
             <a href="/orders" className="text-gray-700 hover:text-red-600 transition duration-200">Orders</a>
           </li>
-
-          
           {/* Add more links as needed */}
         </ul>
         <button
-              className="w-full mt-6 px-4 py-2 bg-red-600 text-white rounded-md shadow-md hover:bg-red-500 transition duration-200"
-              onClick={() => navigate('/')}
-            >
-              Logout
-            </button>
+          className="w-full mt-6 px-4 py-2 bg-red-600 text-white rounded-md shadow-md hover:bg-red-500 transition duration-200"
+          onClick={() => navigate('/')}
+        >
+          Logout
+        </button>
       </div>
 
       {/* Content Area */}
@@ -58,15 +57,38 @@ const Profile = () => {
               <p className="font-medium text-gray-700">Email:</p>
               <p className="text-gray-600">{UserData.email}</p>
             </div>
-
-            {UserData.displayName && (
-              <div className="border-b pb-2">
-                <p className="font-medium text-gray-700">Name:</p>
-                <p className="text-gray-600">{UserData.displayName}</p>
-              </div>
-            )}
-
-           
+            <div className="border-b pb-2">
+              <p className="font-medium text-gray-700">First Name:</p>
+              <p className="text-gray-600">{UserData.firstName}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="font-medium text-gray-700">Last Name:</p>
+              <p className="text-gray-600">{UserData.lastName}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="font-medium text-gray-700">Phone Number:</p>
+              <p className="text-gray-600">{UserData.phoneNumber}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="font-medium text-gray-700">Address:</p>
+              <p className="text-gray-600">{UserData.address}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="font-medium text-gray-700">City:</p>
+              <p className="text-gray-600">{UserData.city}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="font-medium text-gray-700">State:</p>
+              <p className="text-gray-600">{UserData.state}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="font-medium text-gray-700">Country:</p>
+              <p className="text-gray-600">{UserData.country}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="font-medium text-gray-700">Pincode:</p>
+              <p className="text-gray-600">{UserData.pincode}</p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,14 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { assets } from '../assets/assets'; // Assuming you have some assets here
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import CartTotal from '../components/CartTotal';
 import { Input } from '../components/Input';
-import { Link } from 'react-router-dom';
-import axios from 'axios'; // Import axios for making HTTP requests
+import { formSchema } from '../validation/validation'; 
+import axios from 'axios';
+import { z } from 'zod';
+import { ShopContext } from '../store/ShopContext';
+import { useNavigate } from 'react-router-dom';
 
 const PlaceOrder = () => {
-    const [method, setMethod] = useState("cod");
+    const { setUserData } = useContext(ShopContext);
     const [showOtpModal, setShowOtpModal] = useState(false);
     const [otp, setOtp] = useState(new Array(6).fill(""));
+    const navigate = useNavigate();
     const inputRefs = useRef([]);
     const [formValues, setFormValues] = useState({
         firstName: '',
@@ -21,6 +24,7 @@ const PlaceOrder = () => {
         country: '',
         phone: ''
     });
+    const [formErrors, setFormErrors] = useState({});
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -36,34 +40,39 @@ const PlaceOrder = () => {
 
     const handleOtpChange = (element, index) => {
         const value = element.value;
-
-        // Ensure the value is a number
         if (value && isNaN(value)) return;
 
         const newOtp = [...otp];
         newOtp[index] = value;
         setOtp(newOtp);
 
-        // Move to the next input field
-        if (value && index < 5) {
+        if (value && index < otp.length - 1) {
             inputRefs.current[index + 1].focus();
         }
     };
 
     const handleVerifyEmail = async () => {
-        // Check if all fields are filled
-        console.log(formValues)
-
-        const { firstName, lastName, email, street, city, state, pinCode, country, phone } = formValues;
-        if (!firstName || !lastName || !email || !street || !city || !state || !pinCode || !country || !phone) {
-            alert("Please fill in all fields before verifying your email.");
-            return;
+        try {
+            // Validate form values using formSchema
+            formSchema.parse(formValues);
+            setShowOtpModal(true);
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                const errors = error.errors.reduce((acc, err) => {
+                    acc[err.path[0]] = err.message;
+                    return acc;
+                }, {});
+                setFormErrors(errors);
+            }
+            return; // Exit if validation fails
         }
-        setShowOtpModal(true);
-        
+
         try {
             const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await axios.post(`${apiUrl}/api/v1/auth/send-otp`, { email });
+            if (!apiUrl) throw new Error("API URL is not defined");
+
+            // Send request to send OTP
+            const response = await axios.post(`${apiUrl}/api/v1/auth/send-otp`, { email: formValues.email });
             console.log(response.data);
         } catch (error) {
             console.error("Error sending OTP:", error);
@@ -72,65 +81,132 @@ const PlaceOrder = () => {
     };
 
     const handleKeyDown = (e, index) => {
-        if (e.key === "Backspace" && !otp[index]) {
-            if (index > 0) {
-                inputRefs.current[index - 1].focus();
-            }
+        if (e.key === "Backspace" && !otp[index] && index > 0) {
+            inputRefs.current[index - 1].focus();
         }
     };
 
     const handleVerifyOtp = async () => {
         const enteredOtp = otp.join("");
-        const email = formValues.email; // Use the email from form values
+        const {
+            email,
+            firstName,
+            lastName,
+            phone,
+            street,
+            city,
+            state,
+            country,
+            pinCode
+        } = formValues;
 
-       
         try {
             const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await axios.post(`${apiUrl}/api/v1/auth/verifyOTP`, { email, code: enteredOtp });
-            if (response.data.verified) {
-                alert("OTP verified successfully!");
+            const response = await axios.post(`${apiUrl}/api/v1/auth/verify-otp`, {
+                email,
+                code: enteredOtp,
+                firstName,
+                lastName,
+                phoneNumber: phone, 
+                address: street, 
+                city,
+                state,
+                country,
+                pincode: pinCode, 
+            });
+
+            if (response.data && response.data.data) {
+                setUserData(response.data.data);
                 setShowOtpModal(false);
+                
+                alert("OTP verified successfully! User created.");
+                navigate('/profile');
             } else {
                 alert("Invalid OTP. Please try again.");
             }
         } catch (error) {
-            console.log(error);
-            console.error("Error verifying OTP:", error);
+            console.error('Error verifying OTP:', error);
             alert("Error verifying OTP. Please try again.");
         }
+    };
+
+    // Helper function for error messages
+    const renderError = (field) => {
+        return formErrors[field] && <span className='text-red-500 text-sm'>{formErrors[field]}</span>;
     };
 
     return (
         <div className='flex flex-col sm:flex-row justify-between gap-6 pt-8 sm:pt-14 min-h-[80vh] border-t px-4 font-poppins'>
             {/* Delivery Information */}
             <div className='flex flex-col gap-6 w-full sm:max-w-[480px]'>
-                <div className='text-2xl font-bold mb-3'>
-                    Delivery Information
+                <div className='text-2xl font-bold mb-3'>Delivery Information</div>
+                <div className='flex gap-4'>
+                    <div className='flex flex-col w-full'>
+                        <Input type="text" name="firstName" value={formValues.firstName} onChange={handleInputChange} placeholder='First Name' />
+                        {renderError('firstName')}
+                    </div>
+                    <div className='flex flex-col w-full'>
+                        <Input type="text" name="lastName" value={formValues.lastName} onChange={handleInputChange} placeholder='Last Name' />
+                        {renderError('lastName')}
+                    </div>
+                </div>
+                <div className='flex flex-col'>
+                    <Input type="email" name="email" value={formValues.email} onChange={handleInputChange} placeholder='Email address' />
+                    {renderError('email')}
+                </div>
+                <div className='flex flex-col'>
+                    <Input type="text" name="street" value={formValues.street} onChange={handleInputChange} placeholder='Street' />
+                    {renderError('street')}
                 </div>
                 <div className='flex gap-4'>
-                    <Input type={"text"} name="firstName" value={formValues.firstName} onChange={handleInputChange} placeholder={'First Name'} />
-                    <Input type={"text"} name="lastName" value={formValues.lastName} onChange={handleInputChange} placeholder={'Last Name'} />
+                    <div className='flex flex-col w-full'>
+                        <Input type="text" name="city" value={formValues.city} onChange={handleInputChange} placeholder='City' />
+                        {renderError('city')}
+                    </div>
+                    <div className='flex flex-col w-full'>
+                        <Input type="text" name="state" value={formValues.state} onChange={handleInputChange} placeholder='State' />
+                        {renderError('state')}
+                    </div>
                 </div>
-                <Input type={"email"} name="email" value={formValues.email} onChange={handleInputChange} placeholder={'Email address'} />
-                <Input type={"text"} name="street" value={formValues.street} onChange={handleInputChange} placeholder={'Street'} />
-
                 <div className='flex gap-4'>
-                    <Input type={"text"} name="city" value={formValues.city} onChange={handleInputChange} placeholder={'City'} />
-                    <Input type={"text"} name="state" value={formValues.state} onChange={handleInputChange} placeholder={'State'} />
+                    <div className='flex flex-col w-full'>
+                        <Input
+                            type="text"
+                            name="pinCode"
+                            value={formValues.pinCode}
+                            onChange={handleInputChange}
+                            onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ""); }}
+                            inputMode="numeric"
+                            pattern="\d*"
+                            placeholder="Pin code"
+                            maxLength={6}
+                        />
+                        {renderError('pinCode')}
+                    </div>
+                    <div className='flex flex-col w-full'>
+                        <Input type="text" name="country" value={formValues.country} onChange={handleInputChange} placeholder='Country' />
+                        {renderError('country')}
+                    </div>
                 </div>
-                <div className='flex gap-4'>
-                    <Input type={"number"} name="pinCode" value={formValues.pinCode} onChange={handleInputChange} placeholder={'Pin code'} />
-                    <Input type={"number"} name="country" value={formValues.country} onChange={handleInputChange} placeholder={'Country'} />
+                <div className='flex flex-col'>
+                    <Input
+                        type="text"
+                        name="phone"
+                        value={formValues.phone}
+                        onChange={handleInputChange}
+                        onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ""); }}
+                        inputMode="numeric"
+                        pattern="\d*"
+                        placeholder="Phone"
+                        maxLength={10}
+                    />
+                    {renderError('phone')}
                 </div>
-                <Input type={"number"} name="phone" value={formValues.phone} onChange={handleInputChange} placeholder={'Phone'} />
             </div>
 
             {/* Payment Method */}
             <div className='mt-8 w-full sm:max-w-[480px]'>
-                <div>
-                    <CartTotal />
-                </div>
-
+                <CartTotal />
                 <div className='flex flex-col gap-4 mt-4'>
                     <button
                         onClick={handleVerifyEmail}
@@ -153,33 +229,28 @@ const PlaceOrder = () => {
                         <h2 className="text-md sm:text-lg font-bold mb-4 text-center">Enter the OTP</h2>
 
                         <div className="flex justify-between mb-4">
-                            {otp.map((data, index) => (
+                            {otp.map((digit, index) => (
                                 <input
                                     key={index}
-                                    ref={(el) => (inputRefs.current[index] = el)}
+                                    ref={el => inputRefs.current[index] = el}
                                     type="text"
-                                    maxLength="1"
-                                    value={data}
-                                    onChange={(e) => handleOtpChange(e.target, index)}
-                                    onKeyDown={(e) => handleKeyDown(e, index)}
-                                    className="w-10 h-10 sm:w-12 sm:h-12 text-center border-2 border-gray-500 rounded mx-1"
+                                    value={digit}
+                                    onChange={e => handleOtpChange(e.target, index)}
+                                    onKeyDown={e => handleKeyDown(e, index)}
+                                    className="w-1/6 h-12 border rounded text-center"
+                                    maxLength={1}
                                 />
                             ))}
                         </div>
 
-                        <button
-                            onClick={handleVerifyOtp}
-                            className="bg-orange-400 text-black w-full py-2 rounded hover:bg-orange-500 transition-all duration-200 ease-in-out"
-                        >
-                            Verify OTP
-                        </button>
-
-                        <button
-                            onClick={() => setShowOtpModal(false)}
-                            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl sm:text-2xl"
-                        >
-                            &times;
-                        </button>
+                        <div className="flex flex-col gap-4">
+                            <button onClick={handleVerifyOtp} className="bg-black text-white py-2 rounded-md hover:shadow-lg">
+                                Verify OTP
+                            </button>
+                            <button onClick={() => setShowOtpModal(false)} className="text-red-500 text-sm text-center underline">
+                                Cancel
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
