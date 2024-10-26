@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import CartTotal from '../components/CartTotal';
 import { Input } from '../components/Input';
-import { formSchema } from '../validation/validation'; 
-import axios from 'axios';
-import { z } from 'zod';
+import { formSchema } from '../validation/validation';
 import { ShopContext } from '../store/ShopContext';
 import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 
 const PlaceOrder = () => {
-    const { setUserData } = useContext(ShopContext);
+    const { setUserData, sendOtp, verifyOtp } = useContext(ShopContext);
     const [showOtpModal, setShowOtpModal] = useState(false);
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const navigate = useNavigate();
@@ -53,7 +52,6 @@ const PlaceOrder = () => {
 
     const handleVerifyEmail = async () => {
         try {
-            // Validate form values using formSchema
             formSchema.parse(formValues);
             setShowOtpModal(true);
         } catch (error) {
@@ -64,16 +62,11 @@ const PlaceOrder = () => {
                 }, {});
                 setFormErrors(errors);
             }
-            return; // Exit if validation fails
+            return;
         }
 
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            if (!apiUrl) throw new Error("API URL is not defined");
-
-            // Send request to send OTP
-            const response = await axios.post(`${apiUrl}/api/v1/auth/send-otp`, { email: formValues.email });
-            console.log(response.data);
+            await sendOtp(formValues.email);
         } catch (error) {
             console.error("Error sending OTP:", error);
             alert("Error sending OTP. Please try again.");
@@ -88,49 +81,34 @@ const PlaceOrder = () => {
 
     const handleVerifyOtp = async () => {
         const enteredOtp = otp.join("");
-        const {
-            email,
-            firstName,
-            lastName,
-            phone,
-            street,
-            city,
-            state,
-            country,
-            pinCode
-        } = formValues;
+        const userDetails = {
+            firstName: formValues.firstName,
+            lastName: formValues.lastName,
+            phoneNumber: formValues.phone,
+            address: formValues.street,
+            city: formValues.city,
+            state: formValues.state,
+            country: formValues.country,
+            pincode: formValues.pinCode
+        };
 
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await axios.post(`${apiUrl}/api/v1/auth/verify-otp`, {
-                email,
-                code: enteredOtp,
-                firstName,
-                lastName,
-                phoneNumber: phone, 
-                address: street, 
-                city,
-                state,
-                country,
-                pincode: pinCode, 
-            });
+            const response = await verifyOtp(formValues.email, enteredOtp, userDetails);
 
-            if (response.data && response.data.data) {
-                setUserData(response.data.data);
+            if (response && response.data) {
+                setUserData(response.data);
                 setShowOtpModal(false);
-                
                 alert("OTP verified successfully! User created.");
                 navigate('/profile');
             } else {
                 alert("Invalid OTP. Please try again.");
             }
         } catch (error) {
-            console.error('Error verifying OTP:', error);
             alert("Error verifying OTP. Please try again.");
         }
     };
+    
 
-    // Helper function for error messages
     const renderError = (field) => {
         return formErrors[field] && <span className='text-red-500 text-sm'>{formErrors[field]}</span>;
     };
