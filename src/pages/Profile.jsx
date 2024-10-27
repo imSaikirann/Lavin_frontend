@@ -6,9 +6,8 @@ import { FaUser, FaEnvelope, FaPhone, FaHome, FaCheck, FaTimes, FaExchangeAlt } 
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
-  const [isPermanent, setIsPermanent] = useState(false); // For account type toggle
-  const [showPasswordModal, setShowPasswordModal] = useState(false); // Password modal
-  const [password, setPassword] = useState(''); // Password input
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,7 +22,6 @@ const Profile = () => {
           }
         });
         setUserData(response.data);
-        setIsPermanent(!response.data.isTemporary); // Set initial account type
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -32,22 +30,13 @@ const Profile = () => {
     fetchUserData();
   }, [navigate]);
 
-  const toggleAccountType = () => {
-    if (!isPermanent && !userData.password) {
-      // Prompt user to set a password if changing to permanent and no password is set
-      setShowPasswordModal(true);
-    } else {
-      setIsPermanent(!isPermanent);
-    }
-  };
-
   const handlePasswordSubmit = async () => {
     const token = localStorage.getItem('token');
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
-      await axios.patch(
-        `${apiUrl}/api/v1/user/setPassword`,
-        { password },
+      await axios.post(
+        `${apiUrl}/api/v1/user/set-password`,
+        { newPassword: password },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -55,8 +44,13 @@ const Profile = () => {
           }
         }
       );
-      // Update local state to reflect permanent account
-      setIsPermanent(true);
+
+      // Update userData to reflect the permanent account status after password is set
+      setUserData((prevData) => ({
+        ...prevData,
+        isTemporary: false,
+      }));
+
       setShowPasswordModal(false);
     } catch (error) {
       console.error('Error setting password:', error);
@@ -68,22 +62,20 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center font-poppins">
-      <div className="bg-white p-10 rounded-xl shadow-xl max-w-2xl w-full">
-        <h2 className="text-3xl font-semibold text-gray-800 mb-4 text-center">Profile Information</h2>
+    <div className="min-h-screen flex items-center justify-center px-4 py-6 sm:px-6 lg:px-8 font-poppins">
+      <div className="bg-white p-6 md:p-10 rounded-xl max-w-lg md:max-w-2xl w-full">
+        <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-4 text-center">Profile Information</h2>
 
-        {/* Account Status Section with Toggle */}
-        <div className="space-y-4 mb-8 p-6 bg-gray-100 rounded-lg shadow-md">
+        <div className="space-y-4 mb-8 p-4 md:p-6 ">
           <p className="text-gray-700 font-medium text-center flex justify-between items-center">
             <span>Account Status:</span>
             <button 
-              onClick={toggleAccountType} 
               className={`px-4 py-2 rounded-lg font-semibold text-sm 
-                ${isPermanent ? 'bg-green-600 text-white' : 'bg-yellow-500 text-gray-900'} 
+                ${!userData.isTemporary ? 'bg-green-600 text-white' : ' bg-yellow-500 text-gray-900'} 
                 flex items-center gap-2`}
             >
               <FaExchangeAlt />
-              {isPermanent ? 'Permanent Account' : 'Temporary Account'}
+              {!userData.isTemporary ? 'Permanent Account' : ' Temporary Account'}
             </button>
           </p>
           <p className="text-gray-700 font-medium text-center flex justify-between items-center">
@@ -93,9 +85,18 @@ const Profile = () => {
               {userData.isVerified ? 'Verified' : 'Not Verified'}
             </span>
           </p>
+          {!userData.password && (
+            <div className="flex justify-center mt-4">
+              <button 
+                onClick={() => setShowPasswordModal(true)} 
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold text-sm"
+              >
+                Set Password
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Personal Information */}
         <Section title="Personal Information">
           <InfoItem icon={<FaEnvelope />} label="Email" value={userData.email} />
           <InfoItem icon={<FaUser />} label="First Name" value={userData.firstName} />
@@ -103,7 +104,6 @@ const Profile = () => {
           <InfoItem icon={<FaPhone />} label="Phone Number" value={userData.phoneNumber} />
         </Section>
 
-        {/* Address Information */}
         <Section title="Address">
           <InfoItem icon={<FaHome />} label="Street" value={userData.street || 'N/A'} />
           <InfoItem icon={<FaHome />} label="City" value={userData.city} />
@@ -112,7 +112,6 @@ const Profile = () => {
           <InfoItem icon={<FaHome />} label="Pincode" value={userData.pincode} />
         </Section>
 
-        {/* Orders Section */}
         <Section title="Orders">
           <p className="text-gray-600">
             {userData.orders && userData.orders.length > 0
@@ -121,9 +120,8 @@ const Profile = () => {
           </p>
         </Section>
 
-        {/* Password Setup Modal */}
         {showPasswordModal && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center p-4">
             <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Set Your Password</h3>
               <input 
@@ -148,19 +146,19 @@ const Profile = () => {
 };
 
 const Section = ({ title, children }) => (
-  <div className="bg-gray-50 p-6 rounded-lg mb-6 shadow-md">
-    <h3 className="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">{title}</h3>
+  <div className="bg-gray-50 p-4 md:p-6 rounded-lg mb-4 md:mb-6 shadow-md">
+    <h3 className="text-lg font-semibold text-gray-800 mb-3 md:mb-4 border-b pb-2">{title}</h3>
     <div className="space-y-3">{children}</div>
   </div>
 );
 
 const InfoItem = ({ label, value, icon }) => (
-  <div className="flex items-center justify-between border-b pb-2">
-    <div className="flex items-center gap-2">
+  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b pb-2">
+    <div className="flex items-center gap-2 mb-1 sm:mb-0">
       <span className="text-gray-700">{icon}</span>
       <p className="font-medium text-gray-700">{label}:</p>
     </div>
-    <p className="text-gray-600">{value}</p>
+    <p className="text-gray-600 text-sm sm:text-base">{value}</p>
   </div>
 );
 
