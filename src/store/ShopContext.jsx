@@ -110,13 +110,15 @@ export const ShopContextProvider = ({ children }) => {
   };
 
    const verifyOtp = async (email, code, userDetails) => {
+    console.log(code)
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
 
       const response = await axios.post(`${apiUrl}/api/v1/auth/verify-otp`, {
         email,
         code,
-        ...userDetails,
+        ...userDetails
+    
       });
       return response.data;
     } catch (error) {
