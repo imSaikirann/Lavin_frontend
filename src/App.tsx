@@ -13,6 +13,11 @@ import PlaceOrder from "./pages/PlaceOrder"
 import Signup from "./pages/Signup"
 import Signin from "./pages/Signin"
 import Profile from "./pages/Profile"
+import Privacy from "./pages/Privacy"
+import Terms from "./pages/Terms"
+import PricingPolicy from "./pages/pricing"
+import ShippingPolicy from "./pages/Shipping"
+import RefundAndCancellationPolicy from "./pages/Refund"
 
 function App() {
  
@@ -33,6 +38,16 @@ function App() {
       <Route path="/signup" element={<Signup/>}></Route>
       <Route path="/signin" element={<Signin/>}></Route>
       <Route path="/profile" element={<Profile/>}></Route>
+      <Route path="/privacy-policy" element={<Privacy/>}></Route>
+      <Route path="/terms-and-conditions" element={<Terms/>}></Route>
+      <Route path="/pricing-policy" element={<PricingPolicy/>}></Route>
+      <Route path="/shipping-policy" element={<ShippingPolicy/>}></Route>
+      <Route path="/refund-and-cancellation-policy" element={<RefundAndCancellationPolicy/>}></Route>
+
+
+
+
+
     
 
 
