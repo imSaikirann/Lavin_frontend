@@ -15,7 +15,7 @@ import Signin from "./pages/Signin"
 import Profile from "./pages/Profile"
 import Privacy from "./pages/Privacy"
 import Terms from "./pages/Terms"
-import PricingPolicy from "./pages/pricing"
+import PricingPolicy from "./pages/PricingPolicy"
 import ShippingPolicy from "./pages/Shipping"
 import RefundAndCancellationPolicy from "./pages/Refund"
 
