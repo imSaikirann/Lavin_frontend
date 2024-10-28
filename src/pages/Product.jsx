@@ -13,7 +13,7 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
 
   const { products = [], dataStatus = "loading", handleCart } = useContext(ShopContext) || {};
-  const s3Url = import.meta.env.VITE_S3_URL;
+ 
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -52,8 +52,8 @@ const Product = () => {
   };
 
   const addToCart = () => {
-    const productPrice = selectedProduct.price; // Get the product price
-    handleCart(id, selectedProduct, selectedVariantIndex, quantity, productPrice); // Pass price as parameter
+    const productPrice = selectedProduct.price; 
+    handleCart(id, selectedProduct, selectedVariantIndex, quantity, productPrice); 
   };
 
   return (
@@ -67,7 +67,7 @@ const Product = () => {
             <div className="flex-row sm:flex-row overflow-x-auto sm:overflow-y-scroll gap-3 justify-between sm:justify-normal sm:w-[18.7%] w-full">
               {!showInternalPages && selectedProduct?.images?.length > 0 && (
                 <img
-                  src={`${s3Url}/${selectedProduct.images[selectedVariantIndex]}`}
+                  src={selectedProduct.images[selectedVariantIndex]}
                   alt="Cover Image"
                   className="w-[20%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
                 />
@@ -80,7 +80,7 @@ const Product = () => {
                   {selectedProduct.internalPages?.length > 0 && (
                     <div className="flex-shrink-0 w-full">
                       <img
-                        src={`${s3Url}/${selectedProduct.internalPages[0].images[currentPageIndex]}`}
+                        src={selectedProduct.internalPages[0].images[currentPageIndex]}
                         alt={`Internal page ${currentPageIndex + 1}`}
                         className="w-[70%] h-auto mx-auto sm:max-h-[400px]"
                       />
@@ -106,7 +106,7 @@ const Product = () => {
               ) : (
                 selectedProduct?.images.length > 0 && (
                   <img
-                    src={`${s3Url}/${selectedProduct.images[selectedVariantIndex]}`}
+                    src={selectedProduct.images[selectedVariantIndex]}
                     alt="Selected Product"
                     className="w-full h-auto"
                   />

@@ -6,11 +6,11 @@ import { assets } from "../assets/assets";
 import CartTotal from '../components/CartTotal';
 
 const Cart = () => {
-  const { dataStatus, cart, products, removeFromCart, updateCartQuantity } = useContext(ShopContext); // <-- Get the updateCartQuantity method
+  const { dataStatus, cart, products, removeFromCart, updateCartQuantity } = useContext(ShopContext); 
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const s3Url = import.meta.env.VITE_S3_URL;
+
 
   console.log(cart)
   const handleCheckout = () => {
@@ -19,13 +19,22 @@ const Cart = () => {
 
   const getProductImage = (productId, variantIndex) => {
     const product = products.find((product) => product.id === productId);
-    if (product && product.images && product.images[variantIndex]) {
-      return `${s3Url}/${product.images[variantIndex]}`;
+    if (product) {
+        if (product.images && product.images[variantIndex]) {
+            console.log("Image URL:", product.images[variantIndex]);
+            return product.images[variantIndex];
+        } else {
+            console.log(`No image found for variantIndex: ${variantIndex}`);
+        }
+    } else {
+        console.log(`No product found with id: ${productId}`);
     }
-  };
+ 
+};
+
 
   const handleRemove = (productId, variantId) => {
-    removeFromCart(productId, variantId); // Call the context method
+    removeFromCart(productId, variantId); 
   };
 
   const handleQuantityChange = (productId, variantId, newQuantity) => {
