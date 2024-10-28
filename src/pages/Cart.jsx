@@ -6,7 +6,7 @@ import { assets } from "../assets/assets";
 import CartTotal from '../components/CartTotal';
 
 const Cart = () => {
-  const { dataStatus, cart, products, removeFromCart, updateCartQuantity } = useContext(ShopContext); 
+  const { dataStatus, cart, products, removeFromCart, updateCartQuantity , variantImage} = useContext(ShopContext); 
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -17,20 +17,7 @@ const Cart = () => {
     navigate("/checkout");
   };
 
-  const getProductImage = (productId, variantIndex) => {
-    const product = products.find((product) => product.id === productId);
-    if (product) {
-        if (product.images && product.images[variantIndex]) {
-            console.log("Image URL:", product.images[variantIndex]);
-            return product.images[variantIndex];
-        } else {
-            console.log(`No image found for variantIndex: ${variantIndex}`);
-        }
-    } else {
-        console.log(`No product found with id: ${productId}`);
-    }
- 
-};
+
 
 
   const handleRemove = (productId, variantId) => {
@@ -60,7 +47,7 @@ const Cart = () => {
             >
               <div className="flex items-center gap-4">
                 <img
-                  src={getProductImage(item.productId, item.varientIndex)}
+                  src={item.variantImage}
                   alt={item.productName}
                   className="w-16 h-16 object-cover"
                 />

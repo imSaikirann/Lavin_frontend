@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Collection = () => {
   const { products, dataStatus, search, showSearch } = useContext(ShopContext); 
-  const s3Url = import.meta.env.VITE_S3_URL;
+
   const navigate = useNavigate();
 
   // Filter products based on search query
@@ -44,7 +44,7 @@ const Collection = () => {
                 <div className="overflow-hidden">
                   {product.images.length > 0 && (
                     <img
-                      src={`${s3Url}/${product.images[0]}`}
+                      src={product.images[0]}
                       alt={product.productName}
                       className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300 ease-in-out"
                     />

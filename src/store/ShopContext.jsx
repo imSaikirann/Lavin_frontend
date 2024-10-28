@@ -40,9 +40,12 @@ export const ShopContextProvider = ({ children }) => {
       const existingProductIndex = cart.findIndex(
         (item) => item.productId === id && item.variant.id === selectedVariant.id
       );
-
+  
+      // Get the variant image based on the selectedVariantIndex
+      const variantImage = selectedProduct.images[selectedVariantIndex];
+  
       let updatedCart;
-
+  
       if (existingProductIndex >= 0) {
         updatedCart = cart.map((item, index) =>
           index === existingProductIndex
@@ -58,17 +61,18 @@ export const ShopContextProvider = ({ children }) => {
             quantity: quantity,
             variantIndex: selectedVariantIndex,
             productPrice: productPrice,
+            variantImage: variantImage, // Set the variant image here
           },
         ];
       }
-
+  
       setCart(updatedCart);
       localStorage.setItem("cart", JSON.stringify(updatedCart));
     } catch (error) {
       console.error("Failed to add to cart:", error);
     }
   };
-
+  
   // Fetch products data
   useEffect(() => {
     const fetchData = async () => {
