@@ -95,7 +95,7 @@ const PlaceOrder = () => {
         };
     
         try {
-            // Include email in the request to verify OTP
+    
             const response = await verifyOtp(formValues.email, enteredOtp, userDetails);
             console.log(response)
             if (response && response.user) {

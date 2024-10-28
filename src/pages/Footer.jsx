@@ -7,7 +7,8 @@ const Footer = () => {
             <div>
               <h4 className="text-lg font-semibold mb-4">About Lavin</h4>
               <p className="text-gray-400">
-                Lavin is your one-stop shop for premium clothing. We provide high-quality products with excellent customer service.
+              Lavin is driven by a passion to create a brand that enriches people's lives in meaningful ways. We aim to provide products that inspire productivity, creativity, and a sense of purpose.
+           
               </p>
             </div>
             
@@ -34,9 +35,9 @@ const Footer = () => {
             <div>
               <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
               <p className="text-gray-400">
-                Email: support@lavin.com <br />
-                Phone: +123 456 7890 <br />
-                Address: 123 Lavin Street, Fashion City
+                Email: Officialforlavin@gmail.com                <br />
+                Phone: +91 9949120878                <br />
+                Address:  Ameerpet, hyderabad, Telangana - India 500073
               </p>
             </div>
   

@@ -20,7 +20,9 @@ const Profile = () => {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
-        });
+        }, {
+          withCredentials: true 
+      });
         setUserData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -45,7 +47,7 @@ const Profile = () => {
         }
       );
 
-      // Update userData to reflect the permanent account status after password is set
+ 
       setUserData((prevData) => ({
         ...prevData,
         isTemporary: false,
