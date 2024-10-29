@@ -1,4 +1,4 @@
-// src/store/ShopContext.js
+
 import axios from "axios";
 import { createContext, useState, useEffect } from "react";
 
@@ -41,7 +41,7 @@ export const ShopContextProvider = ({ children }) => {
         (item) => item.productId === id && item.variant.id === selectedVariant.id
       );
   
-      // Get the variant image based on the selectedVariantIndex
+
       const variantImage = selectedProduct.images[selectedVariantIndex];
   
       let updatedCart;
@@ -61,11 +61,11 @@ export const ShopContextProvider = ({ children }) => {
             quantity: quantity,
             variantIndex: selectedVariantIndex,
             productPrice: productPrice,
-            variantImage: variantImage, // Set the variant image here
+            variantImage: variantImage, 
           },
         ];
       }
-  
+
       setCart(updatedCart);
       localStorage.setItem("cart", JSON.stringify(updatedCart));
     } catch (error) {
@@ -118,13 +118,13 @@ export const ShopContextProvider = ({ children }) => {
     try {
         const apiUrl = import.meta.env.VITE_API_URL;
 
-        // Add withCredentials option to allow sending cookies
+      
         const response = await axios.post(`${apiUrl}/api/v1/auth/verify-otp`, {
             email,
             code,
             ...userDetails
         }, {
-            withCredentials: true // Important to include credentials (cookies)
+            withCredentials: true 
         });
 
         return response.data;
@@ -133,6 +133,40 @@ export const ShopContextProvider = ({ children }) => {
         throw error;
     } 
 };
+
+
+async function syncLocalCartToDB(userId) {
+
+  const localCart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  if (localCart.length === 0) return;
+
+  try {
+      const apiUrl = import.meta.env.VITE_API_URL;
+
+      const response = await axios.post(`${apiUrl}/api/v1/userCart/cart/sync`, {
+          userId,
+          localCartItems: localCart
+      });
+
+      console.log(response);
+
+      if (response.status === 200) {
+          console.log('Cart synced successfully');
+          localStorage.removeItem('cart'); 
+          console.log(UserData)
+      } else {
+          console.error('Failed to sync cart:', response.data.message);
+      }
+  } catch (error) {
+      console.error('Error syncing cart:', error);
+  }
+}
+
+
+async function fetchDbCart(id) {
+  
+}
 
 
   const value = {
@@ -152,7 +186,8 @@ export const ShopContextProvider = ({ children }) => {
     UserData,
     setUserData,
     sendOtp,      
-    verifyOtp     
+    verifyOtp     ,
+    syncLocalCartToDB
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

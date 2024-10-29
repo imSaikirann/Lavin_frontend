@@ -1,38 +1,54 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Spinner from "../components/Spinner";
 import { FaUser, FaEnvelope, FaPhone, FaHome, FaCheck, FaTimes, FaExchangeAlt } from 'react-icons/fa';
+import { ShopContext } from '../store/ShopContext';
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
+  const { syncLocalCartToDB } = useContext(ShopContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setLoading(true); 
+      setError(null); 
       const token = localStorage.getItem('token');
-      try {
-        const apiUrl = import.meta.env.VITE_API_URL;
-        const response = await axios.get(`${apiUrl}/api/v1/user/profile`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }, {
-          withCredentials: true 
-      });
-        setUserData(response.data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
+
+      if (token) {
+        try {
+          const apiUrl = import.meta.env.VITE_API_URL;
+          const response = await axios.get(`${apiUrl}/api/v1/user/profile`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            withCredentials: true 
+          });
+          setUserData(response.data);
+          syncLocalCartToDB(response.data.id);
+        } catch (err) {
+          console.error('Error fetching user data:', err);
+          setError('Failed to fetch user data. Please try again.');
+        } finally {
+          setLoading(false); 
+        }
+      } else {
+        setLoading(false); 
+        navigate('/login'); 
       }
     };
 
     fetchUserData();
-  }, [navigate]);
+  }, [navigate, syncLocalCartToDB]);
 
   const handlePasswordSubmit = async () => {
+    setLoading(true); 
     const token = localStorage.getItem('token');
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
@@ -47,37 +63,43 @@ const Profile = () => {
         }
       );
 
- 
       setUserData((prevData) => ({
         ...prevData,
-        isTemporary: false,
+        isTemporary: false, 
       }));
-
+ 
       setShowPasswordModal(false);
     } catch (error) {
       console.error('Error setting password:', error);
+      setError('Failed to set password. Please try again.'); 
+    } finally {
+      setLoading(false); 
     }
   };
 
-  if (!userData) {
-    return <Spinner />;
+  if (loading) {
+    return <Spinner />; 
+  }
+
+  if (error) {
+    return <div className="text-red-600 text-center">{error}</div>; 
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-6 sm:px-6 lg:px-8 font-poppins">
-      <div className="bg-white p-6 md:p-10 rounded-xl max-w-lg md:max-w-2xl w-full">
+    <div className="min-h-screen flex items-center justify-center  font-poppins">
+      <div className="bg-white  md:p-10 rounded-xl max-w-lg md:max-w-2xl w-full">
         <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-4 text-center">Profile Information</h2>
 
-        <div className="space-y-4 mb-8 p-4 md:p-6 ">
+        <div className="space-y-4 mb-8 p-4 md:p-6">
           <p className="text-gray-700 font-medium text-center flex justify-between items-center">
             <span>Account Status:</span>
             <button 
               className={`px-4 py-2 rounded-lg font-semibold text-sm 
-                ${!userData.isTemporary ? 'bg-green-600 text-white' : ' bg-yellow-500 text-gray-900'} 
+                ${!userData.isTemporary ? 'bg-green-600 text-white' : 'bg-yellow-500 text-gray-900'} 
                 flex items-center gap-2`}
             >
               <FaExchangeAlt />
-              {!userData.isTemporary ? 'Permanent Account' : ' Temporary Account'}
+              {!userData.isTemporary ? 'Permanent Account' : 'Temporary Account'}
             </button>
           </p>
           <p className="text-gray-700 font-medium text-center flex justify-between items-center">

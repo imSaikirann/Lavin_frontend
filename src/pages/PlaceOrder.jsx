@@ -39,13 +39,13 @@ const PlaceOrder = () => {
 
     const handleOtpChange = (element, index) => {
         const value = element.value;
-        if (isNaN(value) || value.length > 1) return; // Prevent entering more than one digit
+        if (isNaN(value) || value.length > 1) return; 
 
         const newOtp = [...otp];
         newOtp[index] = value;
         setOtp(newOtp);
 
-        // Move focus to the next input
+  
         if (value && index < otp.length - 1) {
             inputRefs.current[index + 1].focus();
         }
@@ -103,6 +103,7 @@ const PlaceOrder = () => {
                 setShowOtpModal(false); 
                 localStorage.setItem('token',response.accessToken)
                 navigate('/profile'); 
+               
             } else {
                 alert("Invalid OTP. Please try again.");
             }
