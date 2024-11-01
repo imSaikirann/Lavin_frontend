@@ -43,17 +43,6 @@ function App() {
       <Route path="/pricing-policy" element={<PricingPolicy/>}></Route>
       <Route path="/shipping-policy" element={<ShippingPolicy/>}></Route>
       <Route path="/refund-and-cancellation-policy" element={<RefundAndCancellationPolicy/>}></Route>
-
-
-
-
-
-    
-
-
-
-
-
     </Routes>
     <Footer/>
   </div>

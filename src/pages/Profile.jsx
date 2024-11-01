@@ -6,12 +6,11 @@ import { FaUser, FaEnvelope, FaPhone, FaHome, FaCheck, FaTimes, FaExchangeAlt } 
 import { ShopContext } from '../store/ShopContext';
 
 const Profile = () => {
-  const [userData, setUserData] = useState(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null); 
-  const { syncLocalCartToDB } = useContext(ShopContext);
+ const { userData,setUserData} = useContext(ShopContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +30,6 @@ const Profile = () => {
             withCredentials: true 
           });
           setUserData(response.data);
-          syncLocalCartToDB(response.data.id);
         } catch (err) {
           console.error('Error fetching user data:', err);
           setError('Failed to fetch user data. Please try again.');
@@ -45,7 +43,7 @@ const Profile = () => {
     };
 
     fetchUserData();
-  }, [navigate, syncLocalCartToDB]);
+  }, [navigate]);
 
   const handlePasswordSubmit = async () => {
     setLoading(true); 

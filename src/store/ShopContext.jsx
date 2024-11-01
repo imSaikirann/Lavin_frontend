@@ -1,6 +1,6 @@
-
-import axios from "axios";
+import axios from "../Auth/axiosConfig";
 import { createContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const ShopContext = createContext(null);
 
@@ -13,9 +13,14 @@ export const ShopContextProvider = ({ children }) => {
   const [showSearch, setShowSearch] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [cart, setCart] = useState([]);
-  const [UserData, setUserData] = useState([]);
+  const [userData, setUserData] = useState([]);
+  const [isUser, setIsUser] = useState(!!localStorage.getItem("token")); 
+  const navigate = useNavigate();
 
-  // Retrieve cart from localStorage on mount
+  // Helper functions for token handling
+  const getToken = () => localStorage.getItem("token");
+  const setToken = (token) => localStorage.setItem("token", token);
+
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     const parsedCart = storedCart ? JSON.parse(storedCart) : [];
@@ -28,24 +33,40 @@ export const ShopContextProvider = ({ children }) => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  const removeFromCart = (productId, variantId) => {
-    setCart((prevCart) =>
-      prevCart.filter((item) => !(item.productId === productId && item.variant.id === variantId))
-    );
+  const removeFromCart = async (productId, variantId) => {
+    const token = getToken();
+
+    if (token) {
+      try {
+        await axios.delete('/api/v1/userCart/cart/removeProduct', {
+          headers: { Authorization: `Bearer ${token}` },
+          data: { productId, variantId },
+          withCredentials: true,
+        });
+
+        setCart((prevCart) =>
+          prevCart.filter((item) => !(item.productId === productId && item.variant.id === variantId))
+        );
+      } catch (error) {
+        console.error("Error removing item from cart:", error);
+      }
+    } else {
+      setCart((prevCart) =>
+        prevCart.filter((item) => !(item.productId === productId && item.variant.id === variantId))
+      );
+    }
   };
 
-  const handleCart = (id, selectedProduct, selectedVariantIndex, quantity, productPrice) => {
+  const handleCart = async (id, selectedProduct, selectedVariantIndex, quantity, productPrice) => {
     try {
       const selectedVariant = selectedProduct.variants[selectedVariantIndex];
       const existingProductIndex = cart.findIndex(
         (item) => item.productId === id && item.variant.id === selectedVariant.id
       );
-  
 
       const variantImage = selectedProduct.images[selectedVariantIndex];
-  
       let updatedCart;
-  
+
       if (existingProductIndex >= 0) {
         updatedCart = cart.map((item, index) =>
           index === existingProductIndex
@@ -58,50 +79,113 @@ export const ShopContextProvider = ({ children }) => {
           {
             productId: id,
             variant: selectedVariant,
-            quantity: quantity,
+            quantity,
             variantIndex: selectedVariantIndex,
-            productPrice: productPrice,
-            variantImage: variantImage, 
+            productPrice,
+            variantImage,
           },
         ];
       }
 
       setCart(updatedCart);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+      const token = getToken();
+      if (token) {
+        const apiUrl = import.meta.env.VITE_API_URL;
+        await axios.post(
+          `${apiUrl}/api/v1/userCart/cart/addProduct`,
+          { productId: id, variant: selectedVariant, variantIndex: selectedVariantIndex, quantity, productPrice, variantImage },
+          { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, withCredentials: true }
+        );
+      } else {
+        console.log("hi")
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+      }
     } catch (error) {
       console.error("Failed to add to cart:", error);
     }
   };
-  
-  // Fetch products data
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const apiUrl = import.meta.env.VITE_API_URL;
-        const response = await axios.get(`${apiUrl}/api/v1/bookProducts/getProducts`);
-        setProducts(response.data.data);
-        setDataStatus("success");
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        setDataStatus("error");
+
+  const updateCartQuantity = async (productId, variantIndex, newQuantity) => {
+    const token = getToken();
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+    try {
+      if (token) {
+        await axios.patch(
+          `${apiUrl}/api/v1/userCart/cart/updateQuantity`,
+          { productId, variantIndex, newQuantity },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+          }
+        );
+        console.log('Cart item quantity updated successfully on server');
+      } else {
+        setCart((prevCart) =>
+          prevCart.map((item) =>
+            item.productId === productId && item.variantIndex === variantIndex
+              ? { ...item, quantity: newQuantity }
+              : item
+          )
+        );
       }
-    };
 
-    fetchData();
-  }, []);
-
-  // Update cart quantity
-  const updateCartQuantity = (productId, variantId, newQuantity) => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.productId === productId && item.variant.id === variantId
-          ? { ...item, quantity: newQuantity }
-          : item
-      )
-    );
+      setCart((prevCart) =>
+        prevCart.map((item) =>
+          item.productId === productId && item.variantIndex === variantIndex
+            ? { ...item, quantity: newQuantity }
+            : item
+        )
+      );
+    } catch (err) {
+      console.error("Error updating cart item quantity:", err);
+    }
   };
 
-  // Send OTP function
+ // Fetch products data
+ useEffect(() => { 
+  const fetchData = async () => {
+    try {
+   
+      const response = await axios.get('/api/v1/bookProducts/getProducts');
+      setProducts(response.data.data);
+      setDataStatus("success");
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setDataStatus("error");
+    }  
+  };
+
+  fetchData();
+}, []);
+
+
+  const fetchUserData = async () => {
+    setLoading(true);
+    setError(null);
+    const token = getToken();
+
+    if (token) {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const response = await axios.get(`${apiUrl}/api/v1/user/profile`, {
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+          withCredentials: true,
+        });
+        setUserData(response.data);
+      } catch (err) {
+        console.error('Error fetching user data:', err);
+        setError('Failed to fetch user data. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
+      navigate('/login');
+    }
+  };
+
   const sendOtp = async (email) => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
@@ -114,60 +198,21 @@ export const ShopContextProvider = ({ children }) => {
   };
 
   const verifyOtp = async (email, code, userDetails) => {
-    console.log(code);
     try {
-        const apiUrl = import.meta.env.VITE_API_URL;
-
-      
-        const response = await axios.post(`${apiUrl}/api/v1/auth/verify-otp`, {
-            email,
-            code,
-            ...userDetails
-        }, {
-            withCredentials: true 
-        });
-
-        return response.data;
-    } catch (error) {
-        console.error("Error verifying OTP:", error);
-        throw error;
-    } 
-};
-
-
-async function syncLocalCartToDB(userId) {
-
-  const localCart = JSON.parse(localStorage.getItem('cart')) || [];
-
-  if (localCart.length === 0) return;
-
-  try {
       const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await axios.post(`${apiUrl}/api/v1/auth/verify-otp`, {
+        email,
+        code,
+        ...userDetails,
+      }, { withCredentials: true });
 
-      const response = await axios.post(`${apiUrl}/api/v1/userCart/cart/sync`, {
-          userId,
-          localCartItems: localCart
-      });
-
-      console.log(response);
-
-      if (response.status === 200) {
-          console.log('Cart synced successfully');
-          localStorage.removeItem('cart'); 
-          console.log(UserData)
-      } else {
-          console.error('Failed to sync cart:', response.data.message);
-      }
-  } catch (error) {
-      console.error('Error syncing cart:', error);
-  }
-}
-
-
-async function fetchDbCart(id) {
-  
-}
-
+      setToken(response.data.newAccessToken);  
+      return response.data;
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      throw error;
+    }
+  };
 
   const value = {
     currency,
@@ -180,14 +225,15 @@ async function fetchDbCart(id) {
     setShowSearch,
     cartCount,
     cart,
+    setCart,
     handleCart,
     removeFromCart,
     updateCartQuantity,
-    UserData,
+    userData,
     setUserData,
-    sendOtp,      
-    verifyOtp     ,
-    syncLocalCartToDB
+    sendOtp,
+    verifyOtp,
+    isUser
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

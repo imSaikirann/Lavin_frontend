@@ -8,8 +8,10 @@ import { ShopContext } from '../store/ShopContext';
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
+    
 
-   const {setShowSearch,cartCount} = useContext(ShopContext)
+   const {setShowSearch,cartCount,userData,isUser} = useContext(ShopContext)
+   console.log(userData)
     const location = useLocation();
 
     const navItems = [
@@ -46,12 +48,12 @@ const Navbar = () => {
                 <img src={assets.search_icon} alt="Search" className='w-5'  onClick={()=>setShowSearch(true)}/>
 
                 <div className='group relative'>
-                   <Link to="/Signup"> <img src={assets.profile_icon} alt="Profile" className='w-5' /></Link>
+                   <Link to={!isUser ? "/signin":"/profile"}> <img src={assets.profile_icon} alt="Profile" className='w-5' /></Link>
                 </div>
 
                 <Link to="/cart" className='relative'>
                     <img src={assets.cart_icon} alt="Cart" className='w-5' />
-                    {/* Only show the cart count badge if the cart count is greater than 0 */}
+               
                     {cartCount > 0 && (
                         <p className={`absolute right-[-5px] bottom-[-5px] w-4 text-center bg-black text-white rounded-full aspect-square text-[8px] leading-4`}>
                             {cartCount}
